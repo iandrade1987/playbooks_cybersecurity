@@ -4,6 +4,8 @@ Centro de playbooks de resposta a incidentes de cibersegurança — 15 runbooks 
 
 Inclui mapeamento **MITRE ATT&CK®**, uma **matriz de prioridade e escalonamento** (P1–P4) independente da severidade técnica, e referências às obrigações legais aplicáveis (**RGPD** e **NIS2**, com supervisão do CNCS em Portugal).
 
+🔗 **Demo ao vivo:** [iandrade1987.pythonanywhere.com](https://iandrade1987.pythonanywhere.com)
+
 Este repositório tem duas formas de usar o conteúdo:
 
 ## 1. Aplicação web (`app/`) — recomendada
@@ -23,10 +25,19 @@ Uma aplicação Flask + SQLite que corre localmente, com login e persistência r
 - **Download** de um playbook individual ou de uma categoria completa como ficheiro HTML autónomo.
 - **Exportação/Impressão para PDF** de todo o documento.
 
+### Requisitos
+
+- **Python 3.9 ou superior** — [python.org/downloads](https://www.python.org/downloads/)
+- **pip** — já vem incluído com o Python
+- **SQLite** — não é preciso instalar nada à parte; vem embutido na biblioteca padrão do Python (`sqlite3`)
+
 ### Como correr
 
 ```bash
 cd app
+python -m venv venv
+source venv/bin/activate   # Windows: venv\Scripts\activate
+
 pip install -r requirements.txt
 python app.py
 ```
