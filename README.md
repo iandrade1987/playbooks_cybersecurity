@@ -6,9 +6,7 @@ Inclui mapeamento **MITRE ATT&CK®**, uma **matriz de prioridade e escalonamento
 
 🔗 **Demo ao vivo:** [iandrade1987.pythonanywhere.com](https://iandrade1987.pythonanywhere.com)
 
-Este repositório tem duas formas de usar o conteúdo:
-
-## 1. Aplicação web (`app/`) — recomendada
+## Aplicação web (`app/`)
 
 Uma aplicação Flask + SQLite que corre localmente, com login e persistência real em base de dados: os textos editados, os itens de checklist marcados e as equipas atribuídas a cada ação ficam guardados entre sessões.
 
@@ -48,7 +46,7 @@ Depois abrir [http://127.0.0.1:8002](http://127.0.0.1:8002) no browser. Da prime
 
 - [Flask](https://flask.palletsprojects.com/) (Python) para o backend e autenticação por sessão.
 - SQLite para persistência (categorias, playbooks, estado das checklists e das equipas atribuídas).
-- Frontend em HTML/CSS/JS simples (sem framework), com o mesmo sistema visual do artefacto estático.
+- Frontend em HTML/CSS/JS simples (sem framework).
 
 ### Estrutura
 
@@ -64,10 +62,6 @@ app/
     ├── app.js            # Lógica do dashboard (fetch à API, edição, checklists)
     └── style.css          # Sistema visual (tema claro/escuro)
 ```
-
-## 2. Artefacto estático (`playbooks-ciberseguranca.html`)
-
-Uma versão anterior, autónoma num único ficheiro HTML — sem servidor nem base de dados, guarda o progresso no `localStorage` do browser. Útil para consulta rápida ou para partilhar sem precisar de instalar nada; basta abrir o ficheiro diretamente no browser.
 
 ## Aviso
 
