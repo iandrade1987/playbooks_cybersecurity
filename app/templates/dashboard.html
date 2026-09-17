@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Centro de Playbooks de Cibersegurança</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="app">
+  <nav class="sidebar" aria-label="Navegação de playbooks">
+    <div class="brand">
+      <div class="brand-row">
+        <span id="brand-icon"></span>
+        <div class="brand-text">
+          <span class="tag">SOC · Resposta a Incidentes</span>
+          <h1>Playbooks Ciber</h1>
+        </div>
+      </div>
+      <div class="sub">15 runbooks · 5 categorias</div>
+    </div>
+
+    <button class="home-btn" id="home-btn" type="button">
+      <span id="home-icon"></span>
+      <span>Início</span>
+    </button>
+
+    <div class="search-box">
+      <span id="search-icon" class="search-icon"></span>
+      <input id="search" type="text" placeholder="Filtrar playbooks…" autocomplete="off">
+    </div>
+
+    <div id="nav-tree"></div>
+
+    <div class="sidebar-foot">
+      <div class="user-row">
+        <span>{{ username }}</span>
+        <a href="{{ url_for('logout') }}" class="logout-link"><span id="logout-icon"></span>Sair</a>
+      </div>
+      v1.0 · sistema local com base de dados
+    </div>
+  </nav>
+
+  <main class="main">
+    <div class="topbar">
+      <span class="count-pill" id="visible-count">15 playbooks</span>
+      <div class="spacer"></div>
+      <button class="btn" id="expand-all-btn"><span id="expand-icon"></span><span class="btn-label">Expandir tudo</span></button>
+      <button class="btn primary" onclick="window.print()"><span id="print-icon"></span>Exportar / Imprimir PDF</button>
+    </div>
+
+    <section class="hero">
+      <div class="eyebrow">Referência interna · Blue Team</div>
+      <h2>Centro de Playbooks de Cibersegurança</h2>
+      <p>Procedimentos de resposta a incidentes por tipo de ataque — deteção, contenção, erradicação, recuperação e comunicação, com as ferramentas concretas para executar cada passo. Tudo o que edita e marca fica guardado na base de dados desta aplicação.</p>
+      <p>Use a barra lateral ou o campo de pesquisa para saltar diretamente para um playbook.</p>
+      <div class="legend">
+        <span><i style="background:var(--sev-critical)"></i>Severidade crítica</span>
+        <span><i style="background:var(--sev-high)"></i>Severidade alta</span>
+        <span><i style="background:var(--sev-medium)"></i>Severidade média</span>
+      </div>
+    </section>
+
+    <section class="matrix-section">
+      <h3 class="matrix-title"><span id="matrix-icon"></span>Matriz de Prioridade &amp; Escalonamento</h3>
+      <p class="matrix-sub">Prioridade (P1–P4) é independente da severidade técnica: combina impacto no negócio, exposição de dados e obrigações regulatórias (RGPD / NIS2) para decidir <em>quem</em> decide e <em>em quanto tempo</em>.</p>
+      <div class="matrix-table-wrap" id="priority-matrix"></div>
+    </section>
+
+    <div class="content" id="content"></div>
+
+    <footer class="doc-foot">
+      Estrutura de fases alinhada com NIST SP 800-61r2. Técnicas referenciadas segundo MITRE ATT&amp;CK® Enterprise. RGPD (Reg. UE 2016/679) e NIS2 (UE 2022/2555), supervisão CNCS em Portugal.<br>
+      Documento vivo — reveja após cada exercício ou incidente real. Owner: Equipa de Segurança da Informação.
+    </footer>
+  </main>
+</div>
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

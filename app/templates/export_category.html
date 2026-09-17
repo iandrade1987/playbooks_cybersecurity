@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ cat.name }} — Playbooks de Cibersegurança</title>
+<style>{{ css|safe }}</style>
+</head>
+<body>
+{% from "_macros.html" import playbook_card, category_banner %}
+<div class="content" style="padding:36px;max-width:880px;margin:0 auto;">
+  {{ category_banner(cat) }}
+  {% for pb in cat.playbooks %}
+    {{ playbook_card(pb, cat, priority_info) }}
+  {% endfor %}
+</div>
+</body>
+</html>

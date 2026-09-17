@@ -1,0 +1,96 @@
+{% macro category_banner(cat) %}
+<div class="category-banner">
+  <div class="bar" style="background:{{ cat.color }}"></div>
+  {{ icon_chip(cat.icon, cat.color, 'lg') | safe }}
+  <h3>{{ cat.name }}</h3>
+  <span class="n">{{ cat.playbooks|length }} playbooks</span>
+</div>
+{% endmacro %}
+
+{% macro playbook_card(pb, cat, priority_info) %}
+{% set pinfo = priority_info.get(pb.priority) %}
+<article class="playbook" id="{{ pb.id }}" style="border-left-color:{{ cat.color }}">
+  <div class="pb-head">
+    {{ icon_chip(pb.icon, cat.color, 'md') | safe }}
+    <h4>{{ pb.name }}</h4>
+    <span class="badge priority-{{ pb.priority }}">{{ pinfo.label if pinfo else pb.priority }}</span>
+    <span class="badge sev-{{ pb.severity }}">{{ {'critical':'Severidade Crítica','high':'Severidade Alta','medium':'Severidade Média'}[pb.severity] }}</span>
+    <span class="badge sla">{{ icon('clock', 'icon-xs') | safe }}{{ pb.sla }}</span>
+  </div>
+  <p class="pb-objective">{{ pb.objective }}</p>
+
+  <div class="meta-row">
+    <div class="pb-block">
+      <h5><span class="num">{{ icon('users', 'icon-xs') | safe }}</span>Equipas Envolvidas</h5>
+      <div class="indicators team-chips">{% for t in pb.team %}<span>{{ t.text }}</span>{% endfor %}</div>
+    </div>
+    <div class="pb-block">
+      <h5><span class="num">{{ icon('radar', 'icon-xs') | safe }}</span>Métodos de Deteção</h5>
+      <div class="indicators method-chips">
+        {% for m in pb.detectionMethods %}
+        <label class="chip-toggle{{ ' marked' if m.marked else '' }}">
+          <input type="checkbox" {{ 'checked' if m.marked else '' }} disabled>
+          <span class="chip-check">{{ icon('clipboard-check', 'icon-xs') | safe }}</span>
+          <span>{{ m.text }}</span>
+        </label>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="pb-block pb-full" style="margin-bottom:18px;">
+    <h5><span class="num">{{ icon('eye', 'icon-xs') | safe }}</span>Indicadores de Deteção (sinais observáveis)</h5>
+    <div class="indicators">{% for i in pb.indicators %}<span>{{ i.text }}</span>{% endfor %}</div>
+  </div>
+
+  <div class="pb-block pb-full" style="margin-bottom:18px;">
+    <h5><span class="num">{{ icon('network', 'icon-xs') | safe }}</span>Mapeamento MITRE ATT&amp;CK<sup>®</sup></h5>
+    <div class="indicators attack-row">
+      {% if pb.attack %}
+        {% for a in pb.attack %}<span class="attack-chip"><code>{{ a.id }}</code>{{ a.name }}</span>{% endfor %}
+      {% else %}
+        <span class="attack-note">{{ pb.attackNote or "Sem mapeamento ATT&CK aplicável" }}</span>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="pb-grid">
+    {% for phase_key, phase_title, phase_icon in [
+        ('containment', 'Fase 1 · Contenção Imediata', 'lock'),
+        ('eradication', 'Fase 2 · Erradicação', 'trash'),
+        ('recovery', 'Fase 3 · Recuperação', 'refresh-cw'),
+        ('communication', 'Fase 4 · Comunicação & Conformidade', 'megaphone'),
+        ('postIncident', 'Fase 5 · Pós-Incidente', 'clipboard-check')] %}
+    <div class="pb-block">
+      <h5><span class="num">{{ icon(phase_icon, 'icon-xs') | safe }}</span>{{ phase_title }}</h5>
+      <ul>
+        {% for step in pb[phase_key] %}
+        <li>{{ step.text }}
+          {% if step.tools %}<div class="step-tools">{% for t in step.tools %}<span>{{ t }}</span>{% endfor %}</div>{% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+  </div>
+
+  <hr class="pb-div">
+
+  <div class="pb-block pb-full">
+    <h5><span class="num">{{ icon('clipboard-check', 'icon-xs') | safe }}</span>Checklist de Execução</h5>
+    <ul class="checklist">
+      {% for phase_key in ['containment','eradication','recovery','communication','postIncident'] %}
+        {% for step in pb[phase_key] %}
+        <li class="checklist-item{{ ' done' if step.checked else '' }}">
+          <div class="check-row">
+            <input type="checkbox" {{ 'checked' if step.checked else '' }} disabled>
+            <label>{{ step.text }}</label>
+            {% if step.teams %}<span class="team-btn assigned"><span class="team-btn-icon">{{ icon('users','icon-xs') | safe }}</span><span class="team-btn-label">{{ step.teams|join(', ') }}</span></span>{% endif %}
+          </div>
+        </li>
+        {% endfor %}
+      {% endfor %}
+    </ul>
+  </div>
+</article>
+{% endmacro %}

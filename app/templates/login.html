@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entrar — Playbooks Ciber</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="brand-row">
+      <span>{{ icon_chip('shield', 'var(--accent)', 'md') | safe }}</span>
+      <div class="brand-text" style="display:inline-flex;flex-direction:column;vertical-align:middle;margin-left:10px;">
+        <span class="tag">SOC · Resposta a Incidentes</span>
+        <h1 style="font-family:var(--font-display);font-size:17px;margin:2px 0 0;">Playbooks Ciber</h1>
+      </div>
+    </div>
+    <h2>Entrar</h2>
+    <p class="sub">Aceda com a conta criada localmente nesta máquina.</p>
+    {% if error %}<div class="auth-error">{{ error }}</div>{% endif %}
+    <form method="post">
+      <div class="field">
+        <label for="username">Utilizador</label>
+        <input type="text" id="username" name="username" autocomplete="username" required autofocus>
+      </div>
+      <div class="field">
+        <label for="password">Palavra-passe</label>
+        <input type="password" id="password" name="password" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="btn primary auth-submit">Entrar</button>
+    </form>
+  </div>
+</div>
+</body>
+</html>

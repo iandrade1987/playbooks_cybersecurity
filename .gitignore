@@ -1,0 +1,22 @@
+# Segredos e dados locais — nunca versionar
+app/.secret_key
+app/playbooks.db
+app/*.db
+app/*.db-journal
+app/*.db-wal
+app/*.db-shm
+app/server.log
+*.log
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

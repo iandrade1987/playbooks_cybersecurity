@@ -1,0 +1,2065 @@
+<title>Centro de Playbooks de Cibersegurança</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #f5f7fa;
+    --bg-panel: #ffffff;
+    --bg-raised: #ffffff;
+    --border: #d8dfe8;
+    --border-soft: #e6ebf1;
+    --text: #131a24;
+    --text-dim: #4c5866;
+    --text-faint: #7c8898;
+    --accent: #0d6efd;
+    --accent-soft: #e8f1ff;
+    --code-bg: #eef2f7;
+
+    --sev-critical: #c92a3d;
+    --sev-critical-bg: #fbe7ea;
+    --sev-high: #b3591a;
+    --sev-high-bg: #fbeee0;
+    --sev-medium: #8a6d00;
+    --sev-medium-bg: #faf3d6;
+
+    --cat-malware: #d1495b;
+    --cat-social: #c98a1a;
+    --cat-network: #1a8fa8;
+    --cat-cloud: #7c5cc9;
+    --cat-insider: #1f9e7a;
+
+    --font-display: ui-monospace, "Cascadia Code", "Consolas", "SFMono-Regular", Menlo, monospace;
+    --font-body: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --bg: #0a0e14;
+      --bg-panel: #0e131b;
+      --bg-raised: #131a24;
+      --border: #232d3b;
+      --border-soft: #1b2330;
+      --text: #e7edf5;
+      --text-dim: #a2adbb;
+      --text-faint: #6b7686;
+      --accent: #4ea6ff;
+      --accent-soft: #14283f;
+      --code-bg: #0c1119;
+
+      --sev-critical: #ff6b7d;
+      --sev-critical-bg: #3a1520;
+      --sev-high: #ffab5c;
+      --sev-high-bg: #3a2712;
+      --sev-medium: #f0d264;
+      --sev-medium-bg: #362d0e;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0a0e14;
+    --bg-panel: #0e131b;
+    --bg-raised: #131a24;
+    --border: #232d3b;
+    --border-soft: #1b2330;
+    --text: #e7edf5;
+    --text-dim: #a2adbb;
+    --text-faint: #6b7686;
+    --accent: #4ea6ff;
+    --accent-soft: #14283f;
+    --code-bg: #0c1119;
+
+    --sev-critical: #ff6b7d;
+    --sev-critical-bg: #3a1520;
+    --sev-high: #ffab5c;
+    --sev-high-bg: #3a2712;
+    --sev-medium: #f0d264;
+    --sev-medium-bg: #362d0e;
+  }
+
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --bg: #f5f7fa;
+    --bg-panel: #ffffff;
+    --bg-raised: #ffffff;
+    --border: #d8dfe8;
+    --border-soft: #e6ebf1;
+    --text: #131a24;
+    --text-dim: #4c5866;
+    --text-faint: #7c8898;
+    --accent: #0d6efd;
+    --accent-soft: #e8f1ff;
+    --code-bg: #eef2f7;
+
+    --sev-critical: #c92a3d;
+    --sev-critical-bg: #fbe7ea;
+    --sev-high: #b3591a;
+    --sev-high-bg: #fbeee0;
+    --sev-medium: #8a6d00;
+    --sev-medium-bg: #faf3d6;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 15.5px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection { background: var(--accent); color: #fff; }
+
+  a { color: var(--accent); }
+
+  .app {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    min-height: 100vh;
+  }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    border-right: 1px solid var(--border);
+    background: var(--bg-panel);
+    padding: 22px 16px 40px;
+  }
+  .brand {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 6px 18px;
+    border-bottom: 1px solid var(--border-soft);
+    margin-bottom: 14px;
+  }
+  .brand-row { display: flex; align-items: center; gap: 12px; }
+  .brand-text { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .brand .tag {
+    font-family: var(--font-display);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .brand h1 {
+    font-family: var(--font-display);
+    font-size: 17px;
+    margin: 2px 0 0;
+    letter-spacing: 0.01em;
+    font-weight: 600;
+  }
+  .brand .sub {
+    font-size: 12px;
+    color: var(--text-faint);
+  }
+
+  /* ---------- Icons ---------- */
+  .icon { width: 16px; height: 16px; flex: none; vertical-align: -3px; }
+  .icon-xs { width: 13px; height: 13px; vertical-align: -2px; }
+  .icon-sm { width: 18px; height: 18px; vertical-align: -4px; color: var(--accent); }
+  .icon-chip {
+    --chip-color: var(--accent);
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--chip-color);
+    background: color-mix(in srgb, var(--chip-color) 14%, transparent);
+    border-radius: 9px;
+    flex: none;
+  }
+  .icon-chip.sm { width: 24px; height: 24px; border-radius: 7px; }
+  .icon-chip.sm .icon { width: 13px; height: 13px; }
+  .icon-chip.md { width: 36px; height: 36px; }
+  .icon-chip.md .icon { width: 19px; height: 19px; }
+  .icon-chip.lg { width: 44px; height: 44px; border-radius: 12px; }
+  .icon-chip.lg .icon { width: 23px; height: 23px; }
+
+  .home-btn {
+    display: flex; align-items: center; gap: 9px;
+    width: 100%;
+    margin: 0 0 14px;
+    padding: 9px 10px;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: var(--font-display);
+    font-size: 12.5px;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    text-align: left;
+  }
+  .home-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .home-btn:hover .icon { color: var(--accent); }
+  .home-btn .icon { color: var(--text-dim); }
+
+  .search-box { position: relative; margin: 0 6px 16px; }
+  .search-box input {
+    width: 100%;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    color: var(--text);
+    padding: 9px 10px 9px 32px;
+    font-size: 13px;
+    font-family: var(--font-body);
+  }
+  .search-box input:focus { outline: 2px solid var(--accent); outline-offset: 0; }
+  .search-box .search-icon {
+    position: absolute;
+    left: 10px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-faint);
+    display: flex;
+    pointer-events: none;
+  }
+  .search-box .search-icon .icon { width: 14px; height: 14px; }
+
+  .cat-group { margin-bottom: 4px; }
+  .cat-head {
+    display: flex; align-items: center; gap: 9px;
+    padding: 7px 6px;
+    font-family: var(--font-display);
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .cat-head-label { min-width: 0; }
+  .cat-count {
+    margin-left: auto;
+    font-size: 10.5px;
+    color: var(--text-faint);
+    font-family: var(--font-display);
+  }
+  .cat-items { list-style: none; margin: 0 0 10px; padding: 0 0 0 6px; }
+  .cat-items li a {
+    display: flex; align-items: center; gap: 8px;
+    text-decoration: none;
+    color: var(--text-dim);
+    font-size: 13.2px;
+    padding: 6px 10px 6px 16px;
+    border-left: 2px solid var(--border-soft);
+    border-radius: 0 5px 5px 0;
+    transition: background .12s, color .12s, border-color .12s;
+  }
+  .cat-items li a .icon { color: var(--text-faint); }
+  .cat-items li a:hover { background: var(--code-bg); color: var(--text); }
+  .cat-items li a.active {
+    color: var(--text);
+    background: var(--accent-soft);
+    border-left-color: var(--accent);
+    font-weight: 600;
+  }
+  .cat-items li a.active .icon { color: var(--accent); }
+
+  .reset-link {
+    display: block;
+    margin-top: 8px;
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: var(--font-body);
+    font-size: 11.5px;
+    color: var(--text-faint);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .reset-link:hover { color: var(--accent); }
+
+  .sidebar-foot {
+    margin-top: 18px;
+    padding: 12px 10px 0;
+    border-top: 1px solid var(--border-soft);
+    font-size: 11.5px;
+    color: var(--text-faint);
+    font-family: var(--font-display);
+  }
+
+  /* ---------- Main ---------- */
+  .main { min-width: 0; }
+  .topbar {
+    position: sticky; top: 0; z-index: 5;
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 36px;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .topbar .count-pill {
+    font-family: var(--font-display);
+    font-size: 11.5px;
+    color: var(--text-dim);
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+  .topbar .spacer { flex: 1; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: var(--font-display);
+    font-size: 12px;
+    letter-spacing: 0.03em;
+    background: var(--bg-raised);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 8px 14px;
+    cursor: pointer;
+  }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn.primary:hover { filter: brightness(1.08); color: #fff; }
+  .btn.sm { padding: 5px 10px; font-size: 10.5px; }
+  .btn:focus-visible, input:focus-visible, a:focus-visible, .icon-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .icon-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; flex: none;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-dim);
+    cursor: pointer;
+    margin-left: auto;
+  }
+  .icon-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+  .hero {
+    padding: 46px 36px 30px;
+    max-width: 880px;
+  }
+  .hero .eyebrow {
+    font-family: var(--font-display);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .hero h2 {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 3vw, 34px);
+    margin: 0 0 14px;
+    text-wrap: balance;
+    font-weight: 600;
+  }
+  .hero p { color: var(--text-dim); max-width: 66ch; margin: 0 0 8px; }
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 8px 18px;
+    margin-top: 20px;
+    font-size: 12px;
+    color: var(--text-faint);
+  }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend i { width: 9px; height: 9px; border-radius: 2px; display: inline-block; }
+
+  .matrix-section { padding: 0 36px 10px; max-width: 880px; }
+  .matrix-title {
+    display: flex; align-items: center; gap: 9px;
+    font-family: var(--font-display);
+    font-size: 15px;
+    margin: 0 0 8px;
+    font-weight: 600;
+  }
+  .matrix-sub { color: var(--text-dim); font-size: 13.5px; max-width: 68ch; margin: 0 0 16px; }
+  .matrix-table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 8px;
+  }
+  table.matrix-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.matrix-table th, table.matrix-table td {
+    text-align: left;
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border-soft);
+    vertical-align: top;
+  }
+  table.matrix-table tr:last-child td { border-bottom: none; }
+  table.matrix-table thead th {
+    font-family: var(--font-display);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    background: var(--code-bg);
+    font-weight: 600;
+  }
+  table.matrix-table td.mx-priority {
+    font-family: var(--font-display);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  table.matrix-table td.mx-response { font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--text); font-weight: 600; }
+  table.matrix-table td.mx-desc { color: var(--text-dim); }
+
+  .content { padding: 0 36px 80px; max-width: 880px; }
+
+  .category-section { margin-top: 46px; }
+  .category-banner {
+    display: flex; align-items: center; gap: 14px;
+    padding: 10px 0 16px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 22px;
+  }
+  .category-banner .bar { width: 5px; align-self: stretch; border-radius: 3px; }
+  .category-banner h3 {
+    font-family: var(--font-display);
+    font-size: 20px;
+    margin: 0;
+    font-weight: 600;
+    flex: 1;
+  }
+  .category-banner .n {
+    font-size: 12px; color: var(--text-faint); font-family: var(--font-display);
+  }
+
+  /* ---------- Playbook card ---------- */
+  .playbook {
+    scroll-margin-top: 70px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-left-width: 4px;
+    border-radius: 10px;
+    padding: 26px 28px 22px;
+    margin-bottom: 24px;
+  }
+  .pb-head {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px;
+    margin-bottom: 6px;
+  }
+  .pb-head h4 {
+    font-family: var(--font-display);
+    font-size: 19px;
+    margin: 0;
+    font-weight: 600;
+    flex: 1 1 auto;
+    min-width: 200px;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-family: var(--font-display);
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 20px;
+    white-space: nowrap;
+    font-weight: 600;
+  }
+  .badge.sev-critical { color: var(--sev-critical); background: var(--sev-critical-bg); }
+  .badge.sev-high { color: var(--sev-high); background: var(--sev-high-bg); }
+  .badge.sev-medium { color: var(--sev-medium); background: var(--sev-medium-bg); }
+  .badge.sla { color: var(--text-dim); background: var(--code-bg); border: 1px solid var(--border); }
+  .badge.priority-P1 { color: var(--sev-critical); background: transparent; border: 1.5px solid var(--sev-critical); }
+  .badge.priority-P2 { color: var(--sev-high); background: transparent; border: 1.5px solid var(--sev-high); }
+  .badge.priority-P3 { color: var(--sev-medium); background: transparent; border: 1.5px solid var(--sev-medium); }
+  .badge.priority-P4 { color: var(--text-faint); background: transparent; border: 1.5px solid var(--border); }
+
+  .attack-row { gap: 8px; }
+  .attack-chip {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 12px;
+    background: var(--code-bg);
+    border: 1px solid var(--border-soft);
+    color: var(--text-dim);
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+  .attack-chip code {
+    font-family: var(--font-display);
+    font-size: 11px;
+    color: var(--accent);
+    background: none;
+    padding: 0;
+  }
+  .attack-note { font-size: 12px; color: var(--text-faint); font-style: italic; }
+
+  .related-block { margin-top: 6px; }
+  .related-chip {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 12.5px;
+    text-decoration: none;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 5px 11px;
+    border-radius: 20px;
+    transition: border-color .12s, color .12s;
+  }
+  .related-chip .icon { color: inherit; }
+  .related-chip:hover { border-color: var(--accent); color: var(--accent); }
+
+  .pb-objective {
+    color: var(--text-dim);
+    font-size: 14.5px;
+    margin: 6px 0 20px;
+    max-width: 68ch;
+  }
+
+  .pb-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px 26px;
+  }
+  @media (max-width: 720px) {
+    .app { grid-template-columns: 1fr; }
+    .sidebar { position: static; height: auto; }
+    .pb-grid { grid-template-columns: 1fr; }
+  }
+
+  .pb-block { min-width: 0; }
+  .pb-block h5 {
+    font-family: var(--font-display);
+    font-size: 11.5px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin: 0 0 9px;
+    display: flex; align-items: center; gap: 7px;
+  }
+  .pb-block h5 .num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; border-radius: 6px;
+    background: var(--code-bg); color: var(--accent);
+  }
+  .pb-block ul, .pb-block ol { margin: 0; padding-left: 19px; }
+  .pb-block li { margin-bottom: 6px; font-size: 13.6px; }
+  .pb-block li::marker { color: var(--text-faint); }
+
+  .pb-full { grid-column: 1 / -1; }
+
+  .indicators {
+    display: flex; flex-wrap: wrap; gap: 7px;
+    margin-bottom: 4px;
+  }
+  .indicators span {
+    font-size: 12px;
+    background: var(--code-bg);
+    border: 1px solid var(--border-soft);
+    color: var(--text-dim);
+    padding: 4px 9px;
+    border-radius: 6px;
+  }
+
+  .meta-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 26px;
+    margin-bottom: 18px;
+    padding-bottom: 18px;
+    border-bottom: 1px dashed var(--border-soft);
+  }
+  @media (max-width: 720px) {
+    .meta-row { grid-template-columns: 1fr; }
+  }
+  .team-chips span {
+    background: var(--accent-soft);
+    border-color: transparent;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .method-chips span {
+    background: var(--code-bg);
+    border-color: var(--border);
+    color: var(--text);
+    font-family: var(--font-display);
+    font-size: 11.5px;
+  }
+
+  .pb-block h5 .hint {
+    text-transform: none;
+    letter-spacing: 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    color: var(--text-faint);
+    font-size: 11px;
+  }
+
+  .chip-toggle {
+    position: relative;
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 10px 5px 10px;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: var(--font-display);
+    font-size: 11.5px;
+    color: var(--text);
+    cursor: pointer;
+    user-select: none;
+    transition: background .12s, border-color .12s, color .12s;
+  }
+  .chip-toggle input {
+    position: absolute;
+    opacity: 0;
+    width: 0; height: 0;
+    pointer-events: none;
+  }
+  .chip-toggle .chip-check {
+    display: inline-flex;
+    color: var(--text-faint);
+  }
+  .chip-toggle .chip-check .icon { width: 13px; height: 13px; }
+  .chip-toggle:hover { border-color: var(--accent); }
+  .chip-toggle.marked,
+  .chip-toggle:has(input:checked) {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .chip-toggle.marked .chip-check,
+  .chip-toggle:has(input:checked) .chip-check {
+    color: var(--accent);
+  }
+
+  .checklist { list-style: none; padding-left: 0; margin: 0; }
+  .checklist-item {
+    list-style: none;
+    padding: 7px 0;
+    border-bottom: 1px dashed var(--border-soft);
+  }
+  .checklist-item::marker { content: none; }
+  .checklist-item::-webkit-details-marker { display: none; }
+  .checklist-item:last-child { border-bottom: none; }
+  .check-row {
+    display: flex; align-items: center; gap: 9px;
+    font-size: 13.6px;
+  }
+  .check-row label { flex: 1 1 auto; padding: 2px 0; }
+  .checklist input[type="checkbox"] {
+    appearance: none; -webkit-appearance: none;
+    flex: none;
+    width: 16px; height: 16px;
+    margin: 0;
+    border: 1.5px solid var(--border);
+    border-radius: 5px;
+    background: var(--bg-panel);
+    cursor: pointer;
+    position: relative;
+  }
+  .checklist input[type="checkbox"]:hover { border-color: var(--accent); }
+  .checklist input[type="checkbox"]:checked {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .checklist input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    left: 4px; top: 1px;
+    width: 4px; height: 8px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  .checklist input[type="checkbox"]:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .checklist-item.done .check-row label { color: var(--text-faint); text-decoration: line-through; }
+  .checklist-item label[contenteditable="true"] { text-decoration: none !important; }
+
+  .team-picker {
+    margin: 8px 0 2px 24px;
+    padding: 10px 12px;
+    background: var(--accent-soft);
+    border: 1px dashed var(--accent);
+    border-radius: 8px;
+  }
+  .team-picker-label {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .team-picker-opts { display: flex; flex-wrap: wrap; gap: 6px; }
+  .team-opt {
+    font-family: var(--font-body);
+    font-size: 12.5px;
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 5px 11px;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  .team-opt:hover { border-color: var(--accent); color: var(--accent); }
+  .team-opt.selected {
+    background: var(--accent); border-color: var(--accent); color: #fff;
+  }
+  .team-opt.selected:hover { color: #fff; filter: brightness(1.08); }
+
+  .team-picker-done {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--font-display);
+    font-size: 12px; font-weight: 600;
+    background: var(--accent);
+    color: #fff;
+    border: 1px solid var(--accent);
+    padding: 5px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-left: 4px;
+  }
+  .team-picker-done:hover { filter: brightness(1.08); }
+
+  .team-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    margin-left: auto; flex: none;
+    height: 34px;
+    padding: 0 14px;
+    font-family: var(--font-display);
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--text-dim);
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    cursor: pointer;
+  }
+  .team-btn .icon { color: var(--text-faint); }
+  .team-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .team-btn:hover .icon { color: var(--accent); }
+  .team-btn.assigned {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .team-btn.assigned .icon { color: var(--accent); }
+
+  /* ---------- Inline text editing ---------- */
+  .icon-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .edit-hint {
+    display: none;
+    align-items: center; gap: 8px;
+    font-size: 12px;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px dashed var(--accent);
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin: 0 0 16px;
+  }
+  .playbook.editing .edit-hint { display: flex; }
+  .playbook.editing [data-editkey] {
+    outline: 1.5px dashed color-mix(in srgb, var(--accent) 55%, transparent);
+    outline-offset: 2px;
+    border-radius: 4px;
+    cursor: text;
+  }
+  .playbook.editing [data-editkey]:focus {
+    outline: 1.5px solid var(--accent);
+    background: var(--accent-soft);
+  }
+
+  hr.pb-div { border: none; border-top: 1px solid var(--border-soft); margin: 18px 0; }
+
+  .no-match { display: none; }
+
+  footer.doc-foot {
+    max-width: 880px;
+    margin: 20px 36px 60px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-soft);
+    color: var(--text-faint);
+    font-size: 12px;
+    font-family: var(--font-display);
+  }
+
+  /* ---------- Print ---------- */
+  @media print {
+    .sidebar, .topbar { display: none !important; }
+    .app { display: block; }
+    .content { padding: 0 8px; max-width: none; }
+    .hero { padding: 0 8px 20px; }
+    .playbook { break-inside: avoid; border-color: #999 !important; }
+    .category-section { break-before: page; }
+    .category-section:first-of-type { break-before: auto; }
+    body { background: #fff; color: #000; }
+    a { color: #000; text-decoration: none; }
+  }
+</style>
+
+<div class="app">
+  <nav class="sidebar" aria-label="Navegação de playbooks">
+    <div class="brand">
+      <div class="brand-row">
+        <span id="brand-icon"></span>
+        <div class="brand-text">
+          <span class="tag">SOC · Resposta a Incidentes</span>
+          <h1>Playbooks Ciber</h1>
+        </div>
+      </div>
+      <div class="sub">16 runbooks · 5 categorias</div>
+    </div>
+
+    <button class="home-btn" id="home-btn" type="button">
+      <span id="home-icon"></span>
+      <span>Início</span>
+    </button>
+
+    <div class="search-box">
+      <span id="search-icon" class="search-icon"></span>
+      <input id="search" type="text" placeholder="Filtrar playbooks…" autocomplete="off" />
+    </div>
+
+    <div id="nav-tree"></div>
+
+    <div class="sidebar-foot">
+      v1.0 · atualizado 2026-07-20
+      <button type="button" id="reset-edits-btn" class="reset-link">Repor edições de texto</button>
+    </div>
+  </nav>
+
+  <main class="main">
+    <div class="topbar">
+      <span class="count-pill" id="visible-count">16 playbooks</span>
+      <div class="spacer"></div>
+      <button class="btn" id="expand-all-btn"><span id="expand-icon"></span><span class="btn-label">Expandir tudo</span></button>
+      <button class="btn primary" onclick="window.print()"><span id="print-icon"></span>Exportar / Imprimir PDF</button>
+    </div>
+
+    <section class="hero">
+      <div class="eyebrow">Referência interna · Blue Team</div>
+      <h2>Centro de Playbooks de Cibersegurança</h2>
+      <p>Procedimentos de resposta a incidentes por tipo de ataque — deteção, contenção, erradicação, recuperação e comunicação. Consulte a qualquer momento; os checklists ficam guardados neste dispositivo enquanto trabalha um incidente.</p>
+      <p>Use a barra lateral ou o campo de pesquisa para saltar diretamente para um playbook. Para arquivar ou partilhar, exporte para PDF através do botão no topo.</p>
+      <div class="legend">
+        <span><i style="background:var(--sev-critical)"></i>Severidade crítica</span>
+        <span><i style="background:var(--sev-high)"></i>Severidade alta</span>
+        <span><i style="background:var(--sev-medium)"></i>Severidade média</span>
+      </div>
+    </section>
+
+    <section class="matrix-section">
+      <h3 class="matrix-title"><span id="matrix-icon"></span>Matriz de Prioridade &amp; Escalonamento</h3>
+      <p class="matrix-sub">Prioridade (P1–P4) é independente da severidade técnica: combina impacto no negócio, exposição de dados e obrigações regulatórias (RGPD / NIS2) para decidir <em>quem</em> decide e <em>em quanto tempo</em>.</p>
+      <div class="matrix-table-wrap" id="priority-matrix"></div>
+    </section>
+
+    <div class="content" id="content"></div>
+
+    <footer class="doc-foot">
+      Estrutura de fases alinhada com NIST SP 800-61r2 (Preparação · Deteção &amp; Análise · Contenção/Erradicação/Recuperação · Pós-Incidente). Técnicas referenciadas segundo MITRE ATT&amp;CK® Enterprise. Obrigações legais referenciadas: RGPD (Reg. UE 2016/679) e Diretiva NIS2 (UE 2022/2555), transposta em Portugal sob supervisão do CNCS.<br />
+      Documento vivo — reveja e ajuste os playbooks após cada exercício (tabletop/red team) ou incidente real; recomenda-se revisão formal a cada 6 meses. Owner: Equipa de Segurança da Informação.
+    </footer>
+  </main>
+</div>
+
+<script>
+const ICONS = {
+  shield: '<path d="M12 3l7 3v5c0 5-3.2 8.5-7 10-3.8-1.5-7-5-7-10V6l7-3z"/>',
+  bug: '<circle cx="12" cy="13" r="5"/><line x1="9" y1="9" x2="7" y2="6"/><line x1="15" y1="9" x2="17" y2="6"/><line x1="7" y1="13" x2="3" y2="13"/><line x1="17" y1="13" x2="21" y2="13"/><line x1="8" y1="18" x2="5" y2="21"/><line x1="16" y1="18" x2="19" y2="21"/><line x1="12" y1="8" x2="12" y2="18"/>',
+  cpu: '<rect x="6" y="6" width="12" height="12" rx="1.5"/><rect x="9.5" y="9.5" width="5" height="5"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/>',
+  mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+  briefcase: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="3" y1="13" x2="21" y2="13"/>',
+  key: '<circle cx="8" cy="16" r="3.5"/><path d="M11 13l9-9"/><path d="M16 8l2 2"/><path d="M18 6l2 2"/>',
+  repeat: '<path d="M4 4v5h5"/><path d="M20 20v-5h-5"/><path d="M5 15a8 8 0 0 0 14-4"/><path d="M19 9A8 8 0 0 0 5 13"/>',
+  waves: '<path d="M2 8c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M2 14c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M2 20c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/>',
+  network: '<circle cx="6" cy="6" r="2.2"/><circle cx="18" cy="6" r="2.2"/><circle cx="12" cy="18" r="2.2"/><line x1="7.7" y1="7.3" x2="10.5" y2="16.3"/><line x1="16.3" y1="7.3" x2="13.5" y2="16.3"/><line x1="8.2" y1="6" x2="15.8" y2="6"/>',
+  database: '<ellipse cx="12" cy="5.5" rx="7" ry="2.8"/><path d="M5 5.5v13c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8v-13"/><path d="M5 12c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8"/>',
+  code: '<polyline points="9 8 4 12 9 16"/><polyline points="15 8 20 12 15 16"/>',
+  cloud: '<path d="M7 18a4 4 0 0 1 0-8 5.5 5.5 0 0 1 10.7-1.6A4 4 0 1 1 18 18H7z"/>',
+  terminal: '<rect x="3" y="4" width="18" height="16" rx="2"/><polyline points="7 9 10 12 7 15"/><line x1="12" y1="15" x2="17" y2="15"/>',
+  "user-x": '<circle cx="9" cy="8" r="3.2"/><path d="M3.5 20c0-3.5 2.5-6 5.5-6s5.5 2.5 5.5 6"/><line x1="16" y1="9" x2="21" y2="14"/><line x1="21" y1="9" x2="16" y2="14"/>',
+  "smartphone-off": '<rect x="6" y="2" width="12" height="20" rx="2"/><line x1="3" y1="3" x2="21" y2="21"/><line x1="11" y1="18" x2="13" y2="18"/>',
+  eye: '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>',
+  lock: '<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+  trash: '<polyline points="4 7 20 7"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="M6 7l1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>',
+  "refresh-cw": '<path d="M20 11A8 8 0 0 0 6.3 6.3L4 8.6"/><polyline points="4 4 4 8.6 8.6 8.6"/><path d="M4 13a8 8 0 0 0 13.7 4.7L20 15.4"/><polyline points="20 20 20 15.4 15.4 15.4"/>',
+  megaphone: '<path d="M3 11v2a2 2 0 0 0 2 2h1l3 4v-12l-3 4H5a2 2 0 0 0-2 2z"/><path d="M9 8l8-3v14l-8-3"/><path d="M18 10a3 3 0 0 1 0 4"/>',
+  "clipboard-check": '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6a1 1 0 0 1 1 1v1H8V5a1 1 0 0 1 1-1z"/><polyline points="8.5 13 11 15.5 15.5 10"/>',
+  users: '<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M15.5 6.5a3 3 0 0 1 0 5.7"/><path d="M17.5 20c0-2.5-1.2-4.6-3-5.7"/>',
+  radar: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none"/><path d="M12 12l7-4"/>',
+  search: '<circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.5" y1="15.5" x2="21" y2="21"/>',
+  "chevrons-expand": '<polyline points="7 4 12 9 17 4"/><polyline points="7 20 12 15 17 20"/>',
+  download: '<path d="M12 3v12"/><polyline points="7 10 12 15 17 10"/><path d="M5 19h14"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/>',
+  home: '<path d="M4 11l8-7 8 7"/><path d="M6 9.5V20a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V9.5"/><path d="M10 21v-6h4v6"/>',
+  edit: '<path d="M4 20h4l10.5-10.5a2.121 2.121 0 0 0-3-3L5 17v3z"/><path d="M13.5 6.5l4 4"/>',
+  check: '<polyline points="4 12 9.5 17.5 20 6"/>'
+};
+
+function icon(name, cls) {
+  const body = ICONS[name] || "";
+  return `<svg class="icon${cls ? " " + cls : ""}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
+}
+
+function iconChip(name, color, size) {
+  return `<span class="icon-chip ${size || "md"}" style="--chip-color:${color}">${icon(name)}</span>`;
+}
+
+const CATEGORIES = [
+  {
+    id: "malware",
+    name: "Ataques de Malware e Ransomware",
+    color: "var(--cat-malware)",
+    icon: "bug",
+    playbooks: [
+      {
+        id: "ransomware",
+        icon: "lock",
+        name: "Ransomware",
+        severity: "critical",
+        sla: "Ativação < 15 min",
+        team: ["SOC", "IT Infraestrutura", "Network", "Backup & DR", "Direção / Comité de Crise", "Jurídico"],
+        detectionMethods: ["EDR/XDR (deteção de encriptação em massa)", "SIEM — correlação de eventos", "Monitorização de integridade de backups", "Honeyfiles / canary files", "Alertas de deceção (deception tech)"],
+        priority: "P1",
+        attack: [{ id: "T1486", name: "Data Encrypted for Impact" }, { id: "T1490", name: "Inhibit System Recovery" }],
+        related: ["exfiltracao", "credenciais", "invasao-rede"],
+        objective: "Conter a propagação de ransomware, preservar evidência forense e restaurar operações a partir de backups íntegros sem pagar resgate nem reencriptar dados já comprometidos.",
+        indicators: ["Extensões de ficheiro alteradas em massa", "Notas de resgate (readme/decrypt.txt)", "Picos de I/O em disco", "Serviços de backup desativados", "Ligações a domínios .onion"],
+        containment: [
+          "Isolar imediatamente os sistemas afetados da rede (desligar Wi-Fi/cabo, não desligar a máquina)",
+          "Desativar contas de serviço e partilhas de rede associadas aos hosts comprometidos",
+          "Bloquear os IOCs conhecidos (hashes, IPs C2, domínios) em firewall/EDR",
+          "Identificar o vetor inicial (email, RDP exposto, VPN, supply chain)",
+          "Preservar uma cópia forense (disco/memória) antes de qualquer remediação"
+        ],
+        eradication: [
+          "Identificar a variante de ransomware e correlacionar com inteligência de ameaças",
+          "Analisar exfiltração de dados prévia à encriptação (dupla extorsão)",
+          "Remover persistência, tarefas agendadas e contas criadas pelo atacante",
+          "Repor credenciais de todas as contas com privilégios nos sistemas afetados"
+        ],
+        recovery: [
+          "Validar integridade e ausência de reinfeção nos backups antes de restaurar",
+          "Restaurar por ordem de criticidade de negócio, em ambiente segmentado",
+          "Reconstruir hosts a partir de imagem limpa sempre que a limpeza não seja garantida",
+          "Monitorizar intensivamente 30 dias após restauro"
+        ],
+        communication: [
+          "Ativar plano de continuidade de negócio e comité de crise",
+          "RGPD: se houver dados pessoais expostos, notificar a CNPD em até 72h e avaliar comunicação aos titulares (risco elevado)",
+          "NIS2: se a organização for entidade essencial/importante, emitir alerta precoce ao CNCS em 24h, notificação em 72h e relatório final em 1 mês",
+          "Preparar comunicação interna e, se aplicável, externa (clientes, reguladores, seguradora de cyber-risco)",
+          "Não contactar nem negociar com o atacante sem aprovação legal/direção"
+        ],
+        postIncident: [
+          "Relatório de causa raiz e linha temporal completa do ataque",
+          "Rever política de backups (regra 3-2-1, imutabilidade, isolamento offline)",
+          "Reforçar segmentação de rede e privilégio mínimo"
+        ]
+      },
+      {
+        id: "malware-comum",
+        icon: "bug",
+        name: "Malware Comum / Infeção por Vírus",
+        severity: "high",
+        sla: "Ativação < 30 min",
+        team: ["SOC", "Helpdesk / Suporte IT", "Network"],
+        detectionMethods: ["Antivírus / EDR", "SIEM — correlação de alertas de endpoint", "Sandbox de análise de amostras"],
+        priority: "P3",
+        attack: [{ id: "T1204", name: "User Execution" }, { id: "T1059", name: "Command and Scripting Interpreter" }],
+        related: ["ransomware", "criptojacking"],
+        objective: "Conter e remover infeções de malware em endpoints individuais antes de escalarem para movimento lateral, preservando amostras para análise.",
+        indicators: ["Alertas de antivírus/EDR", "Processos desconhecidos com ligações de rede suspeitas", "Degradação de performance do endpoint", "Alterações não autorizadas em chaves de arranque"],
+        containment: [
+          "Isolar o endpoint afetado da rede via EDR ou desconexão física",
+          "Recolher amostra do ficheiro malicioso em ambiente controlado (sandbox)",
+          "Identificar processos e conexões de rede associados ao malware",
+          "Bloquear hash e indicadores em toda a frota via EDR/antivírus"
+        ],
+        eradication: [
+          "Eliminar ficheiros, chaves de registo e tarefas agendadas maliciosas",
+          "Executar scan completo com motores atualizados",
+          "Verificar se existem mecanismos de persistência adicionais (serviços, drivers)"
+        ],
+        recovery: [
+          "Reintegrar o endpoint na rede apenas após scan limpo confirmado",
+          "Repor palavra-passe do utilizador do dispositivo afetado",
+          "Monitorizar o endpoint durante 7 dias"
+        ],
+        communication: [
+          "Informar o utilizador afetado e recolher contexto (email aberto, USB, download)",
+          "Notificar a equipa de segurança se o mesmo hash aparecer noutros hosts"
+        ],
+        postIncident: [
+          "Atualizar assinaturas/regras de deteção com o novo IOC",
+          "Reforçar formação de sensibilização se a origem for phishing"
+        ]
+      },
+      {
+        id: "criptojacking",
+        icon: "cpu",
+        name: "Criptojacking / Mineração Não Autorizada",
+        severity: "medium",
+        sla: "Ativação < 1h",
+        team: ["SOC", "Infraestrutura / Cloud Ops", "Network", "FinOps"],
+        detectionMethods: ["Monitorização de CPU/GPU (thresholds)", "Alertas de anomalia de custo cloud (FinOps)", "Monitorização de DNS/proxy para pools de mineração"],
+        priority: "P4",
+        attack: [{ id: "T1496", name: "Resource Hijacking" }],
+        related: ["malware-comum", "cloud-misconfig"],
+        objective: "Detetar e eliminar processos de mineração de criptomoeda não autorizados, cortando o acesso às pools de mineração e restaurando capacidade de processamento.",
+        indicators: ["Uso sustentado de CPU/GPU próximo de 100%", "Ventoinhas/temperatura anómalas em servidores", "Tráfego de rede para pools de mineração conhecidas", "Contentores ou tarefas cron desconhecidas"],
+        containment: [
+          "Identificar hosts com picos anómalos de CPU/GPU via monitorização",
+          "Encerrar processos de mineração não autorizados",
+          "Bloquear domínios e portas de pools de mineração conhecidas na firewall",
+          "Isolar temporariamente o host se o processo resistir a terminação"
+        ],
+        eradication: [
+          "Localizar e remover binários, scripts cron e contentores maliciosos",
+          "Identificar vulnerabilidade ou credencial que permitiu a execução (RCE, credenciais fracas, imagem de container comprometida)",
+          "Corrigir a vulnerabilidade explorada"
+        ],
+        recovery: [
+          "Repor performance normal do sistema e validar ausência de recorrência",
+          "Reforçar hardening de imagens de contentores e patch de vulnerabilidades exploradas"
+        ],
+        communication: [
+          "Reportar impacto em custos de infraestrutura/cloud à gestão",
+          "Documentar vetor de entrada para revisão de arquitetura"
+        ],
+        postIncident: [
+          "Implementar alertas automáticos de uso anómalo de CPU/GPU",
+          "Rever políticas de execução de contentores e permissões de imagem"
+        ]
+      }
+    ]
+  },
+  {
+    id: "social",
+    name: "Engenharia Social e Identidade",
+    color: "var(--cat-social)",
+    icon: "users",
+    playbooks: [
+      {
+        id: "phishing",
+        icon: "mail",
+        name: "Phishing",
+        severity: "high",
+        sla: "Ativação < 30 min",
+        team: ["SOC", "Segurança de Email", "Comunicação Interna", "Network"],
+        detectionMethods: ["Reportes de utilizadores (botão de phishing)", "Secure Email Gateway (SEG)", "SIEM — correlação de indicadores"],
+        priority: "P2",
+        attack: [{ id: "T1566", name: "Phishing" }, { id: "T1204.001", name: "Malicious Link" }],
+        related: ["credenciais", "bec", "malware-comum"],
+        objective: "Neutralizar campanhas de phishing removendo o email de todas as caixas, bloqueando a infraestrutura maliciosa e protegendo as contas de utilizadores que interagiram com a mensagem.",
+        indicators: ["Reportes de utilizadores via botão de phishing", "Remetente falsificado (spoofing)", "URLs encurtados ou com typosquatting", "Anexos com macros ou executáveis"],
+        containment: [
+          "Bloquear o remetente e o domínio malicioso no gateway de email",
+          "Remover o email de todas as caixas de correio (purge retroativo)",
+          "Bloquear os URLs maliciosos no proxy/DNS/firewall",
+          "Identificar todos os destinatários e utilizadores que clicaram/introduziram credenciais"
+        ],
+        eradication: [
+          "Rotacionar credenciais de todos os utilizadores que introduziram dados na página falsa",
+          "Rever regras de encaminhamento de email criadas após o incidente",
+          "Analisar o URL/anexo em sandbox para extrair IOCs adicionais"
+        ],
+        recovery: [
+          "Encerrar sessões ativas e forçar novo login com MFA nas contas afetadas",
+          "Confirmar ausência de atividade fraudulenta nas contas comprometidas"
+        ],
+        communication: [
+          "Emitir alerta interno a todos os colaboradores sobre a campanha",
+          "Reportar o domínio/URL a listas de bloqueio e, se aplicável, ao registrar"
+        ],
+        postIncident: [
+          "Atualizar filtros anti-phishing com os novos indicadores",
+          "Incluir o caso em formação de sensibilização (simulações de phishing)"
+        ]
+      },
+      {
+        id: "bec",
+        icon: "briefcase",
+        name: "Business Email Compromise (BEC)",
+        severity: "critical",
+        sla: "Ativação < 15 min",
+        team: ["SOC", "Financeiro", "Jurídico", "Direção", "Network"],
+        detectionMethods: ["Deteção de anomalias no email (regras/reencaminhamentos)", "SIEM — geolocalização de login", "Alertas antifraude do banco"],
+        priority: "P1",
+        attack: [{ id: "T1566", name: "Phishing" }, { id: "T1114.003", name: "Email Forwarding Rule" }, { id: "T1078", name: "Valid Accounts" }],
+        related: ["phishing", "credenciais"],
+        objective: "Interromper fraude financeira baseada em comprometimento de email corporativo, recuperar fundos desviados quando possível e eliminar o acesso do atacante à caixa de correio.",
+        indicators: ["Pedidos urgentes e fora do padrão para alterar dados bancários", "Regras de reencaminhamento ocultas na caixa de correio", "Login a partir de geolocalização/IP invulgar", "Domínios semelhantes ao da organização (lookalike)"],
+        containment: [
+          "Suspender imediatamente a conta de email comprometida e encerrar todas as sessões",
+          "Contactar o banco para tentar reter/reverter a transferência (SWIFT recall)",
+          "Revogar tokens OAuth e aplicações de terceiros ligadas à conta",
+          "Identificar e remover regras de reencaminhamento e delegação de acesso"
+        ],
+        eradication: [
+          "Investigar o vetor inicial (phishing, credential stuffing, MFA fatigue)",
+          "Rever logs de auditoria do email (login, alterações de regras, downloads)",
+          "Verificar se outras contas partilham padrão de comprometimento"
+        ],
+        recovery: [
+          "Repor credenciais e reforçar MFA resistente a phishing (FIDO2)",
+          "Restaurar acesso normal apenas após validação de integridade da conta"
+        ],
+        communication: [
+          "Envolver financeiro, jurídico e apresentar queixa junto da Polícia Judiciária (Cibercrime) por fraude financeira",
+          "Notificar o banco emissor e o banco recetor da transferência o mais rápido possível para tentar recall/bloqueio de fundos",
+          "Notificar parceiros/fornecedores que possam ter recebido instruções fraudulentas em nome da empresa",
+          "RGPD: avaliar exposição de dados pessoais na caixa de correio comprometida e necessidade de notificação à CNPD"
+        ],
+        postIncident: [
+          "Implementar verificação dupla (callback telefónico) para alterações de dados bancários",
+          "Auditar todas as regras de encaminhamento de email na organização"
+        ]
+      },
+      {
+        id: "credenciais",
+        icon: "key",
+        name: "Comprometimento de Credenciais",
+        severity: "high",
+        sla: "Ativação < 20 min",
+        team: ["SOC", "IAM / Identity Team", "Helpdesk", "Network"],
+        detectionMethods: ["Identity Protection (impossible travel)", "SIEM", "UEBA — deteção de comportamento anómalo"],
+        priority: "P2",
+        attack: [{ id: "T1078", name: "Valid Accounts" }, { id: "T1110", name: "Brute Force" }],
+        related: ["phishing", "forca-bruta", "invasao-rede"],
+        objective: "Conter o uso indevido de credenciais comprometidas, cortar o acesso do atacante e restaurar o controlo legítimo da conta com autenticação reforçada.",
+        indicators: ["Alertas de impossible travel", "Login fora de horário habitual", "Alteração inesperada de MFA/dados de recuperação", "Atividade em sistemas fora do perfil habitual do utilizador"],
+        containment: [
+          "Suspender a conta imediatamente (desativar, não apagar)",
+          "Encerrar todas as sessões ativas e tokens de atualização",
+          "Redefinir a palavra-passe através de canal fora de banda",
+          "Validar e reconfigurar os métodos de MFA associados"
+        ],
+        eradication: [
+          "Rever logs de acesso para identificar ações realizadas com a conta comprometida",
+          "Verificar criação de regras, chaves de API ou acessos persistentes pelo atacante",
+          "Identificar a origem da fuga (reutilização de password, infostealer, phishing)"
+        ],
+        recovery: [
+          "Reativar a conta apenas após confirmação de posse pelo utilizador legítimo",
+          "Monitorizar a conta durante o período seguinte à reativação"
+        ],
+        communication: [
+          "Informar o utilizador sobre as ações tomadas e boas práticas (gestor de passwords)",
+          "Verificar se as credenciais expostas são reutilizadas noutros sistemas"
+        ],
+        postIncident: [
+          "Verificar exposição em bases de dados de fugas conhecidas (dark web monitoring)",
+          "Reforçar política de MFA obrigatório e complexidade de password"
+        ]
+      },
+      {
+        id: "forca-bruta",
+        icon: "repeat",
+        name: "Ataque de Força Bruta / Password Spraying",
+        severity: "medium",
+        sla: "Ativação < 45 min",
+        team: ["SOC", "Network", "Infraestrutura de Rede"],
+        detectionMethods: ["SIEM — correlação de falhas de login", "IDS/IPS", "WAF", "Logs do serviço de autenticação"],
+        priority: "P3",
+        attack: [{ id: "T1110", name: "Brute Force" }, { id: "T1110.003", name: "Password Spraying" }],
+        related: ["credenciais", "ddos"],
+        objective: "Travar tentativas automatizadas de adivinhação de credenciais antes que resultem em comprometimento de conta, sem impor bloqueios que causem negação de serviço legítima.",
+        indicators: ["Múltiplas falhas de autenticação em curto espaço de tempo", "Falhas distribuídas por muitas contas a partir do mesmo IP (spraying)", "Tentativas de login a partir de IPs/ASN de reputação baixa", "Picos de tráfego no endpoint de autenticação"],
+        containment: [
+          "Bloquear temporariamente os IPs/intervalos de origem identificados",
+          "Aplicar bloqueio de conta após N tentativas falhadas (account lockout policy)",
+          "Ativar MFA obrigatório para todas as contas visadas, se ainda não ativo",
+          "Aumentar logging e alertas no serviço de autenticação durante o ataque"
+        ],
+        eradication: [
+          "Confirmar que nenhuma tentativa teve sucesso (revisão de logs de login válido)",
+          "Identificar se as listas de utilizadores usadas vieram de fuga de dados anterior"
+        ],
+        recovery: [
+          "Levantar bloqueios de IP após confirmação do fim da atividade maliciosa",
+          "Restaurar acesso a utilizadores legítimos afetados pelo lockout"
+        ],
+        communication: [
+          "Notificar utilizadores cujas contas foram bloqueadas por precaução",
+          "Reportar IPs de origem a feeds de threat intelligence partilhados"
+        ],
+        postIncident: [
+          "Implementar rate limiting e CAPTCHA adaptativo no login",
+          "Rever política de complexidade de password e MFA obrigatório"
+        ]
+      }
+    ]
+  },
+  {
+    id: "rede",
+    name: "Segurança de Rede e Infraestrutura",
+    color: "var(--cat-network)",
+    icon: "network",
+    playbooks: [
+      {
+        id: "ddos",
+        icon: "waves",
+        name: "Ataques DDoS",
+        severity: "high",
+        sla: "Ativação < 10 min",
+        team: ["SOC", "Network", "Rede / NOC", "Provedor DDoS / CDN"],
+        detectionMethods: ["Monitorização de rede (NetFlow/sFlow)", "Alertas do serviço de proteção DDoS", "APM — deteção de degradação de serviço"],
+        priority: "P2",
+        attack: [{ id: "T1498", name: "Network Denial of Service" }, { id: "T1499", name: "Endpoint Denial of Service" }],
+        related: ["forca-bruta", "web-attacks"],
+        objective: "Manter a disponibilidade dos serviços sob ataque volumétrico ou de aplicação, absorvendo ou filtrando o tráfego malicioso sem afetar utilizadores legítimos.",
+        indicators: ["Pico súbito e anómalo de tráfego de entrada", "Latência ou indisponibilidade de serviços públicos", "Padrões de tráfego repetitivo de múltiplas origens (botnet)", "Esgotamento de ligações em balanceadores/firewalls"],
+        containment: [
+          "Ativar mitigação de tráfego junto do provedor de DDoS protection / CDN",
+          "Aplicar rate limiting nos endpoints e APIs expostos",
+          "Bloquear em massa os IPs/ASN de origem identificados como maliciosos",
+          "Desviar tráfego para a CDN/edge network para absorver o volume"
+        ],
+        eradication: [
+          "Identificar o tipo de ataque (volumétrico, protocolo, aplicação) e ajustar regras de mitigação",
+          "Colaborar com o ISP/provedor upstream para scrubbing de tráfego na origem"
+        ],
+        recovery: [
+          "Restabelecer níveis normais de rate limiting após confirmação do fim do ataque",
+          "Validar disponibilidade e performance dos serviços afetados"
+        ],
+        communication: [
+          "Atualizar página de estado do serviço (status page) para clientes",
+          "Informar a gestão sobre impacto e duração do incidente"
+        ],
+        postIncident: [
+          "Rever capacidade de mitigação contratada e dimensionamento de infraestrutura",
+          "Documentar assinatura do ataque para deteção mais rápida no futuro"
+        ]
+      },
+      {
+        id: "invasao-rede",
+        icon: "network",
+        name: "Invasão de Rede / Movimentação Lateral",
+        severity: "critical",
+        sla: "Ativação < 15 min",
+        team: ["SOC", "Threat Hunting / Red Team", "IT Infraestrutura", "Network"],
+        detectionMethods: ["EDR/XDR", "NDR — Network Detection & Response", "SIEM", "Auditoria do Active Directory"],
+        priority: "P1",
+        attack: [{ id: "T1021", name: "Remote Services" }, { id: "T1570", name: "Lateral Tool Transfer" }, { id: "T1078", name: "Valid Accounts" }],
+        related: ["credenciais", "exfiltracao", "ransomware"],
+        objective: "Deter um atacante já dentro da rede antes que expanda o acesso a sistemas críticos, cortando as vias de movimentação lateral e revogando credenciais comprometidas.",
+        indicators: ["Uso anómalo de contas privilegiadas (ex: admin de domínio)", "Ferramentas de pentest/lateral movement não autorizadas (PsExec, Mimikatz, Cobalt Strike)", "Tráfego SMB/RDP interno fora do padrão", "Novas contas ou grupos criados no Active Directory"],
+        containment: [
+          "Isolar os segmentos de rede afetados (VLANs, microsegmentação)",
+          "Revogar chaves SSH, tokens de API e certificados potencialmente comprometidos",
+          "Desativar contas privilegiadas suspeitas e forçar reset de Kerberos (krbtgt se necessário)",
+          "Bloquear tráfego lateral entre segmentos não essenciais"
+        ],
+        eradication: [
+          "Analisar logs de firewall, Active Directory e EDR para mapear a linha temporal completa",
+          "Remover contas, GPOs e mecanismos de persistência criados pelo atacante",
+          "Identificar e corrigir o ponto de entrada inicial"
+        ],
+        recovery: [
+          "Restaurar segmentação normal por fases, monitorizando cada segmento reativado",
+          "Repor palavra-passe de todas as contas de serviço e administrativas do domínio"
+        ],
+        communication: [
+          "Ativar equipa de resposta a incidentes e, se crítico, direção executiva",
+          "NIS2: avaliar se o incidente é \"significativo\" (perturbação operacional relevante ou perdas financeiras) e obriga a alerta ao CNCS em 24h",
+          "Avaliar necessidade de suporte forense externo especializado"
+        ],
+        postIncident: [
+          "Implementar Tiering Model / privilégio mínimo no Active Directory",
+          "Reforçar deteção de movimento lateral (honeytokens, alertas de comportamento)"
+        ]
+      },
+      {
+        id: "exfiltracao",
+        icon: "database",
+        name: "Exfiltração / Vazamento de Dados",
+        severity: "critical",
+        sla: "Ativação < 15 min",
+        team: ["SOC", "DLP Team", "Network", "Jurídico / DPO"],
+        detectionMethods: ["DLP — Data Loss Prevention", "SIEM", "CASB", "Análise de tráfego de rede"],
+        priority: "P1",
+        attack: [{ id: "T1041", name: "Exfiltration Over C2 Channel" }, { id: "T1567", name: "Exfiltration Over Web Service" }],
+        related: ["ransomware", "invasao-rede", "insider-threat"],
+        objective: "Interromper a saída não autorizada de dados, quantificar o que foi exposto e cumprir as obrigações legais de notificação dentro dos prazos aplicáveis.",
+        indicators: ["Volumes de upload anómalos para destinos externos", "Acesso em massa a repositórios de dados fora do padrão do utilizador", "Uso de canais não autorizados (armazenamento pessoal na cloud, USB)", "Alertas de DLP (Data Loss Prevention)"],
+        containment: [
+          "Identificar e bloquear o canal de saída dos dados (rede, endpoint, aplicação)",
+          "Bloquear transferências em curso e suspender contas/processos envolvidos",
+          "Preservar evidência do tráfego e dos ficheiros acedidos/exportados",
+          "Isolar o sistema de origem da exfiltração"
+        ],
+        eradication: [
+          "Auditar exatamente quais dados foram expostos e a sensibilidade dos mesmos",
+          "Identificar a causa raiz (credencial comprometida, insider, vulnerabilidade aplicacional)",
+          "Remover o acesso ou vulnerabilidade que permitiu a exfiltração"
+        ],
+        recovery: [
+          "Restaurar controlos de acesso e validar que não existem canais de saída adicionais",
+          "Reforçar regras de DLP para os padrões de dados identificados"
+        ],
+        communication: [
+          "RGPD: notificar a CNPD em até 72h após tomar conhecimento; sem demora injustificada aos titulares se o risco for elevado (Art. 33.º/34.º)",
+          "NIS2: se aplicável ao setor da organização, alerta precoce ao CNCS em 24h e notificação formal em 72h",
+          "Envolver jurídico/DPO para avaliar obrigações contratuais, setoriais e regulatórias adicionais",
+          "Preparar comunicação a titulares de dados e/ou clientes afetados, se aplicável"
+        ],
+        postIncident: [
+          "Classificar e rotular dados sensíveis para melhorar deteção futura de DLP",
+          "Rever permissões de acesso segundo o princípio do menor privilégio"
+        ]
+      }
+    ]
+  },
+  {
+    id: "cloud",
+    name: "Segurança em Nuvem (Cloud) e Aplicações",
+    color: "var(--cat-cloud)",
+    icon: "cloud",
+    playbooks: [
+      {
+        id: "web-attacks",
+        icon: "code",
+        name: "Ataques a Aplicações Web (SQLi, XSS)",
+        severity: "high",
+        sla: "Ativação < 30 min",
+        team: ["SOC", "Dev / AppSec", "Network"],
+        detectionMethods: ["WAF — Web Application Firewall", "SIEM", "Logs de aplicação", "RASP — Runtime Application Self-Protection"],
+        priority: "P2",
+        attack: [{ id: "T1190", name: "Exploit Public-Facing Application" }],
+        related: ["api-compromise", "cloud-misconfig"],
+        objective: "Bloquear a exploração ativa de vulnerabilidades em aplicações web, corrigir a falha no código e assegurar que dados comprometidos na base de dados são identificados e limpos.",
+        indicators: ["Alertas de WAF para padrões de SQLi/XSS", "Erros de base de dados anómalos nos logs da aplicação", "Parâmetros de URL/formulário com payloads suspeitos", "Alterações inesperadas de conteúdo em páginas (defacement)"],
+        containment: [
+          "Bloquear os IPs atacantes e o padrão de payload via WAF",
+          "Colocar a aplicação/endpoint vulnerável em modo de manutenção se a exploração for ativa e severa",
+          "Reforçar regras do WAF para o tipo específico de injeção detetado"
+        ],
+        eradication: [
+          "Corrigir a vulnerabilidade no código (parametrização de queries, sanitização/encoding de output)",
+          "Rever todo o código para instâncias semelhantes da mesma classe de vulnerabilidade",
+          "Limpar registos maliciosos inseridos na base de dados (scripts XSS armazenados, dados alterados)"
+        ],
+        recovery: [
+          "Validar a correção em ambiente de teste antes de repor em produção",
+          "Restaurar a partir de backup limpo se a integridade dos dados estiver comprometida"
+        ],
+        communication: [
+          "Informar o dono da aplicação e a equipa de desenvolvimento",
+          "Avaliar se dados de clientes foram expostos e necessidade de notificação"
+        ],
+        postIncident: [
+          "Incluir o caso em testes de segurança aplicacional (SAST/DAST) contínuos",
+          "Reforçar formação de secure coding para a equipa de desenvolvimento"
+        ]
+      },
+      {
+        id: "cloud-misconfig",
+        icon: "cloud",
+        name: "Configuração Incorreta em Nuvem",
+        severity: "high",
+        sla: "Ativação < 30 min",
+        team: ["Cloud Ops / DevOps", "SOC", "Segurança Cloud", "Network"],
+        detectionMethods: ["CSPM — Cloud Security Posture Management", "CloudTrail / Activity Logs", "Alertas nativos do provedor cloud"],
+        priority: "P2",
+        attack: [{ id: "T1530", name: "Data from Cloud Storage" }, { id: "T1580", name: "Cloud Infrastructure Discovery" }],
+        related: ["exfiltracao", "api-compromise", "criptojacking"],
+        objective: "Corrigir rapidamente exposições causadas por má configuração na nuvem (ex: armazenamento público, permissões excessivas) e avaliar se houve acesso não autorizado enquanto a falha esteve ativa.",
+        indicators: ["Alertas de ferramentas CSPM (Cloud Security Posture Management)", "Buckets/contentores de armazenamento com acesso público", "Políticas IAM com permissões excessivas (wildcard *)", "Acessos anómalos nos logs CloudTrail/Activity Log"],
+        containment: [
+          "Corrigir imediatamente a permissão insegura (tornar bucket privado, remover acesso público)",
+          "Restringir a política IAM afetada ao mínimo necessário",
+          "Rotacionar chaves de acesso que possam ter sido expostas"
+        ],
+        eradication: [
+          "Auditar os logs do CloudTrail/Activity Log para identificar acessos durante a exposição",
+          "Verificar se dados foram descarregados ou modificados durante o período de exposição",
+          "Identificar como/quando a configuração incorreta foi introduzida (IaC, alteração manual)"
+        ],
+        recovery: [
+          "Validar todas as configurações semelhantes no restante ambiente cloud",
+          "Reimplementar via Infrastructure as Code com revisão obrigatória"
+        ],
+        communication: [
+          "RGPD: avaliar necessidade de notificação à CNPD (72h) se dados pessoais estiveram expostos publicamente",
+          "NIS2: registar o evento no processo de gestão de incidentes; escalar ao CNCS se causar indisponibilidade de serviço essencial",
+          "Informar a equipa de cloud/DevOps responsável pelo recurso"
+        ],
+        postIncident: [
+          "Ativar CSPM com alertas automáticos e remediação automática (guardrails)",
+          "Implementar revisão obrigatória de infraestrutura como código antes de deploy"
+        ]
+      },
+      {
+        id: "api-compromise",
+        icon: "terminal",
+        name: "Comprometimento de API",
+        severity: "high",
+        sla: "Ativação < 20 min",
+        team: ["SOC", "API / Platform Team", "Network"],
+        detectionMethods: ["API Gateway monitoring", "SIEM", "Secret scanning (repositórios de código)"],
+        priority: "P2",
+        attack: [{ id: "T1552", name: "Unsecured Credentials" }, { id: "T1078.004", name: "Cloud Accounts" }],
+        related: ["cloud-misconfig", "web-attacks"],
+        objective: "Revogar imediatamente credenciais de API comprometidas, limitar o abuso através de rate limiting e restaurar o serviço com chaves seguras.",
+        indicators: ["Chamadas anómalas de volume ou padrão a partir de um token específico", "Uso da API fora de horário ou geografia habitual do cliente", "Chaves de API encontradas expostas em repositórios públicos", "Erros de autenticação/autorização em massa"],
+        containment: [
+          "Revogar instantaneamente as chaves de API afetadas",
+          "Aplicar rate limiting agressivo por token/cliente durante a investigação",
+          "Bloquear os IPs de origem das chamadas anómalas"
+        ],
+        eradication: [
+          "Analisar as chamadas realizadas com a chave comprometida para determinar o impacto",
+          "Identificar a origem da exposição (código-fonte público, log, endpoint sem TLS)",
+          "Corrigir a causa raiz da exposição"
+        ],
+        recovery: [
+          "Emitir novas chaves de API com escopo mínimo necessário",
+          "Comunicar ao cliente/integrador a necessidade de rotação da credencial"
+        ],
+        communication: [
+          "Notificar clientes/parceiros integradores afetados sobre a rotação obrigatória",
+          "Documentar o incidente para a equipa de plataforma/API"
+        ],
+        postIncident: [
+          "Implementar deteção de segredos em repositórios (secret scanning) no pipeline CI/CD",
+          "Reforçar expiração automática e scopes granulares para chaves de API"
+        ]
+      }
+    ]
+  },
+  {
+    id: "insider",
+    name: "Ameaças Internas e Ativos Físicos",
+    color: "var(--cat-insider)",
+    icon: "user-x",
+    playbooks: [
+      {
+        id: "insider-threat",
+        icon: "user-x",
+        name: "Insider Threat (Ameaça Interna)",
+        severity: "critical",
+        sla: "Ativação < 1h (discreta)",
+        team: ["SOC", "RH", "Jurídico", "DPO", "Network"],
+        detectionMethods: ["UEBA — User Entity Behavior Analytics", "DLP", "Monitorização de acessos privilegiados (PAM)"],
+        priority: "P1",
+        attack: [{ id: "T1074", name: "Data Staged" }, { id: "T1005", name: "Data from Local System" }, { id: "T1078", name: "Valid Accounts" }],
+        related: ["exfiltracao", "device-loss"],
+        objective: "Investigar e conter atividade maliciosa ou negligente de um colaborador com acesso legítimo, preservando evidência de forma discreta e em coordenação com RH e jurídico.",
+        indicators: ["Acesso a dados fora do âmbito da função", "Descarregamento massivo de ficheiros antes de saída da empresa", "Uso de dispositivos de armazenamento não autorizados", "Tentativas de contornar controlos de segurança (DLP, proxy)"],
+        containment: [
+          "Iniciar monitorização discreta da atividade do colaborador sem alertar o suspeito",
+          "Validar com jurídico/DPO a base legal e a proporcionalidade da monitorização (RGPD e Código do Trabalho) antes de recolher evidência",
+          "Envolver RH e jurídico antes de qualquer ação visível sobre a conta",
+          "Preparar revogação de acessos para execução imediata no momento apropriado (ex: durante reunião com RH)"
+        ],
+        eradication: [
+          "Revogar todos os privilégios de acesso físico e lógico no momento definido em conjunto com RH/Legal",
+          "Recolher e preservar provas (logs, emails, ficheiros) seguindo cadeia de custódia",
+          "Recuperar ativos da empresa (equipamento, crachás, credenciais)"
+        ],
+        recovery: [
+          "Rever acessos de colegas próximos/subordinados que possam ter sido afetados",
+          "Restaurar dados eventualmente apagados ou corrompidos"
+        ],
+        communication: [
+          "Manter o círculo de conhecimento estritamente limitado (need-to-know)",
+          "Coordenar comunicação oficial com RH, jurídico e, se necessário, autoridades"
+        ],
+        postIncident: [
+          "Rever processo de offboarding e revogação automática de acessos",
+          "Reforçar monitorização de comportamento anómalo (UEBA) para utilizadores privilegiados"
+        ]
+      },
+      {
+        id: "device-loss",
+        icon: "smartphone-off",
+        name: "Perda ou Roubo de Dispositivos",
+        severity: "medium",
+        sla: "Ativação < 30 min",
+        team: ["Helpdesk / IT", "Segurança Física", "Network"],
+        detectionMethods: ["Comunicação direta do colaborador", "MDM/EMM — alertas de geofencing", "Ausência de check-in do dispositivo"],
+        priority: "P3",
+        attack: [],
+        attackNote: "Não mapeado no MITRE ATT&CK Enterprise (risco de ativo físico) — ver ISO/IEC 27001 A.7 (Ativos)",
+        related: ["insider-threat", "credenciais"],
+        objective: "Impedir o acesso a dados corporativos num dispositivo perdido ou roubado através de bloqueio remoto, limpeza de dados e revogação de credenciais associadas.",
+        indicators: ["Comunicação do colaborador sobre perda/roubo", "Dispositivo fora da geofence habitual (MDM)", "Ausência de check-in do dispositivo por período prolongado"],
+        containment: [
+          "Bloquear remotamente o equipamento via MDM/EMM assim que reportado",
+          "Revogar tokens de sessão e certificados digitais associados ao dispositivo",
+          "Desativar temporariamente as contas com sessão ativa no dispositivo"
+        ],
+        eradication: [
+          "Executar limpeza remota de dados (remote wipe) se o dispositivo não for recuperado em prazo definido",
+          "Confirmar que a encriptação de disco estava ativa antes do incidente"
+        ],
+        recovery: [
+          "Emitir novo dispositivo e certificados ao colaborador",
+          "Restaurar acesso normal às contas após reconfiguração segura"
+        ],
+        communication: [
+          "Registar boletim de ocorrência se se tratar de roubo",
+          "Avaliar se dados pessoais/sensíveis estavam armazenados localmente para efeitos de notificação RGPD"
+        ],
+        postIncident: [
+          "Reforçar política de encriptação obrigatória de disco em todos os dispositivos",
+          "Rever tempo de resposta do processo de bloqueio/wipe remoto"
+        ]
+      }
+    ]
+  }
+];
+
+const PHASES = [
+  { key: "indicators", title: "Indicadores de Deteção", num: "0", icon: "eye" },
+  { key: "containment", title: "Fase 1 · Contenção Imediata", num: "1", icon: "lock" },
+  { key: "eradication", title: "Fase 2 · Erradicação", num: "2", icon: "trash" },
+  { key: "recovery", title: "Fase 3 · Recuperação", num: "3", icon: "refresh-cw" },
+  { key: "communication", title: "Fase 4 · Comunicação & Conformidade", num: "4", icon: "megaphone" },
+  { key: "postIncident", title: "Fase 5 · Pós-Incidente", num: "5", icon: "clipboard-check" }
+];
+
+const SEV_LABEL = { critical: "Severidade Crítica", high: "Severidade Alta", medium: "Severidade Média" };
+
+const PRIORITY_INFO = {
+  P1: { label: "P1 · Crítica", response: "Imediata · < 15 min", authority: "CISO / Comité de Crise", desc: "Impacto severo em CID (confidencialidade, integridade, disponibilidade); risco à continuidade de negócio ou obrigação legal imediata (RGPD/NIS2)." },
+  P2: { label: "P2 · Alta", response: "< 30 min", authority: "SOC Lead / Responsável de Segurança", desc: "Impacto significativo, mas contido a um sistema, conta ou processo; sem risco iminente à continuidade de negócio." },
+  P3: { label: "P3 · Média", response: "< 1 hora", authority: "Analista SOC sénior", desc: "Impacto limitado a um único ativo ou utilizador; tratável dentro do horário normal de operação." },
+  P4: { label: "P4 · Baixa", response: "< 4h ou turno seguinte", authority: "Analista SOC", desc: "Impacto mínimo, tipicamente de custo ou eficiência; sem exposição de dados nem indisponibilidade de serviço." }
+};
+
+function esc(s) {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+function escAttr(s) {
+  return esc(s).replace(/"/g, "&quot;");
+}
+
+/* Text-override store — lets users edit playbook copy in place, persisted locally */
+function ov(key, fallback) {
+  const v = localStorage.getItem("pb-edit-" + key);
+  return v !== null ? v : fallback;
+}
+
+/* Stable content-based key for list items — survives inserting/reordering array entries
+   (an index-based key would silently reapply a stale override to the wrong item) */
+function keySlug(s) {
+  return String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40);
+}
+
+function renderPriorityMatrix() {
+  const el = document.getElementById("priority-matrix");
+  const rows = Object.entries(PRIORITY_INFO).map(([key, p]) => `
+    <tr>
+      <td class="mx-priority" style="color:${
+        key === "P1" ? "var(--sev-critical)" : key === "P2" ? "var(--sev-high)" : key === "P3" ? "var(--sev-medium)" : "var(--text-faint)"
+      }">${esc(p.label)}</td>
+      <td class="mx-response">${esc(p.response)}</td>
+      <td>${esc(p.authority)}</td>
+      <td class="mx-desc">${esc(p.desc)}</td>
+    </tr>
+  `).join("");
+  el.innerHTML = `
+    <table class="matrix-table">
+      <thead>
+        <tr><th>Prioridade</th><th>Tempo de Resposta</th><th>Autoridade de Decisão</th><th>Critério</th></tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `;
+}
+
+function renderNav() {
+  const tree = document.getElementById("nav-tree");
+  tree.innerHTML = CATEGORIES.map(cat => `
+    <div class="cat-group" data-cat="${cat.id}">
+      <div class="cat-head">${iconChip(cat.icon, cat.color, "sm")}<span class="cat-head-label">${esc(cat.name)}</span><span class="cat-count">${cat.playbooks.length}</span></div>
+      <ul class="cat-items">
+        ${cat.playbooks.map(pb => `<li><a href="#${pb.id}" data-target="${pb.id}">${icon(pb.icon, "icon-xs")}<span>${esc(pb.name)}</span></a></li>`).join("")}
+      </ul>
+    </div>
+  `).join("");
+}
+
+function renderContent() {
+  const content = document.getElementById("content");
+  content.innerHTML = CATEGORIES.map(cat => `
+    <section class="category-section" data-cat="${cat.id}">
+      <div class="category-banner">
+        <div class="bar" style="background:${cat.color}"></div>
+        ${iconChip(cat.icon, cat.color, "lg")}
+        <h3>${esc(cat.name)}</h3>
+        <span class="n">${cat.playbooks.length} playbooks</span>
+        <button class="btn sm" data-dl-cat="${cat.id}" title="Descarregar todos os playbooks desta categoria">${icon("download", "icon-xs")}<span>Descarregar categoria</span></button>
+      </div>
+      ${cat.playbooks.map(pb => renderPlaybook(pb, cat)).join("")}
+    </section>
+  `).join("");
+}
+
+function renderPlaybook(pb, cat) {
+  const objectiveText = ov(`${pb.id}.objective`, pb.objective);
+
+  const indicatorsHtml = pb.indicators.map((i, idx) => {
+    const key = `${pb.id}.indicators.${keySlug(i)}`;
+    return `<span data-editkey="${key}">${esc(ov(key, i))}</span>`;
+  }).join("");
+
+  const blocks = PHASES.filter(p => p.key !== "indicators").map(phase => `
+    <div class="pb-block">
+      <h5><span class="num">${icon(phase.icon, "icon-xs")}</span>${phase.title}</h5>
+      <ul>${pb[phase.key].map((item, idx) => {
+        const key = `${pb.id}.${phase.key}.${keySlug(item)}`;
+        return `<li data-editkey="${key}">${esc(ov(key, item))}</li>`;
+      }).join("")}</ul>
+    </div>
+  `).join("");
+
+  const allSteps = [];
+  PHASES.filter(p => p.key !== "indicators").forEach(phase => {
+    pb[phase.key].forEach((step, i) => {
+      const key = `${pb.id}.${phase.key}.${keySlug(step)}`;
+      allSteps.push({ id: `${pb.id}-${phase.key}-${keySlug(step)}-${i}`, key, label: ov(key, step) });
+    });
+  });
+
+  const pinfo = PRIORITY_INFO[pb.priority];
+  const attackHtml = pb.attack && pb.attack.length
+    ? pb.attack.map(a => `<span class="attack-chip"><code>${esc(a.id)}</code>${esc(a.name)}</span>`).join("")
+    : `<span class="attack-note">${esc(pb.attackNote || "Sem mapeamento ATT&CK aplicável")}</span>`;
+  const relatedHtml = (pb.related || []).map(rid => {
+    const target = findPlaybook(rid);
+    if (!target) return "";
+    return `<a class="related-chip" href="#${rid}">${icon(target.pb.icon, "icon-xs")}${esc(target.pb.name)}</a>`;
+  }).join("");
+
+  return `
+    <article class="playbook" id="${pb.id}" data-search="${esc((pb.name + " " + objectiveText).toLowerCase())}" style="border-left-color:${cat.color}">
+      <div class="pb-head">
+        ${iconChip(pb.icon, cat.color, "md")}
+        <h4>${esc(pb.name)}</h4>
+        <span class="badge priority-${pb.priority}">${esc(pinfo ? pinfo.label : pb.priority)}</span>
+        <span class="badge sev-${pb.severity}">${SEV_LABEL[pb.severity]}</span>
+        <span class="badge sla">${icon("clock", "icon-xs")}${esc(pb.sla)}</span>
+        <button class="icon-btn" data-edit-toggle="${pb.id}" title="Editar textos deste playbook" aria-label="Editar textos deste playbook">${icon("edit", "icon-xs")}</button>
+        <button class="icon-btn" data-dl-pb="${pb.id}" title="Descarregar «${esc(pb.name)}» em HTML" aria-label="Descarregar este playbook">${icon("download", "icon-xs")}</button>
+      </div>
+      <p class="pb-objective" data-editkey="${pb.id}.objective">${esc(objectiveText)}</p>
+      <div class="edit-hint">${icon("edit", "icon-xs")}Modo de edição ativo — clique num texto para o alterar. As alterações ficam guardadas neste dispositivo.</div>
+
+      <div class="meta-row">
+        <div class="pb-block">
+          <h5><span class="num">${icon("users", "icon-xs")}</span>Equipas Envolvidas</h5>
+          <div class="indicators team-chips">${pb.team.map((t, idx) => {
+            const key = `${pb.id}.team.${keySlug(t)}`;
+            return `<span data-editkey="${key}">${esc(ov(key, t))}</span>`;
+          }).join("")}</div>
+        </div>
+        <div class="pb-block">
+          <h5><span class="num">${icon("radar", "icon-xs")}</span>Métodos de Deteção <span class="hint">— marque o que detetou</span></h5>
+          <div class="indicators method-chips">${pb.detectionMethods.map((t, i) => {
+            const mid = `${pb.id}-method-${keySlug(t)}`;
+            const key = `${pb.id}.method.${keySlug(t)}`;
+            return `<label class="chip-toggle" for="${mid}"><input type="checkbox" id="${mid}" /><span class="chip-check">${icon("clipboard-check", "icon-xs")}</span><span data-editkey="${key}">${esc(ov(key, t))}</span></label>`;
+          }).join("")}</div>
+        </div>
+      </div>
+
+      <div class="pb-block pb-full" style="margin-bottom:18px;">
+        <h5><span class="num">${icon("eye", "icon-xs")}</span>Indicadores de Deteção (sinais observáveis)</h5>
+        <div class="indicators">${indicatorsHtml}</div>
+      </div>
+
+      <div class="pb-block pb-full" style="margin-bottom:18px;">
+        <h5><span class="num">${icon("network", "icon-xs")}</span>Mapeamento MITRE ATT&CK<sup>®</sup></h5>
+        <div class="indicators attack-row">${attackHtml}</div>
+      </div>
+
+      <div class="pb-grid">${blocks}</div>
+
+      <hr class="pb-div" />
+
+      <div class="pb-block pb-full">
+        <h5><span class="num">${icon("clipboard-check", "icon-xs")}</span>Checklist Rápido de Execução <span class="hint">— ao marcar, indique a(s) equipa(s)</span></h5>
+        <ul class="checklist">
+          ${allSteps.map(s => `
+          <li class="checklist-item" data-id="${s.id}">
+            <div class="check-row">
+              <input type="checkbox" id="${s.id}" />
+              <label for="${s.id}" data-editkey="${s.key}">${esc(s.label)}</label>
+              <button type="button" class="team-btn" data-for="${s.id}">
+                <span class="team-btn-icon">${icon("users", "icon-xs")}</span>
+                <span class="team-btn-label">Team</span>
+              </button>
+            </div>
+            <div class="team-picker" data-for="${s.id}" hidden>
+              <span class="team-picker-label">${icon("users", "icon-xs")}Que equipa(s) executaram esta ação? <span class="hint">(pode escolher mais do que uma)</span></span>
+              <div class="team-picker-opts">
+                ${pb.team.map(t => `<button type="button" class="team-opt" data-team="${escAttr(t)}">${esc(t)}</button>`).join("")}
+                <button type="button" class="team-picker-done">${icon("check", "icon-xs")}Concluir</button>
+              </div>
+            </div>
+          </li>`).join("")}
+        </ul>
+      </div>
+
+      ${relatedHtml ? `
+      <div class="pb-block pb-full related-block">
+        <h5>Playbooks Relacionados</h5>
+        <div class="indicators">${relatedHtml}</div>
+      </div>` : ""}
+    </article>
+  `;
+}
+
+/* Checklist persistence + team-of-record attribution (supports multiple teams per action) */
+function getTeams(boxId) {
+  try {
+    const raw = localStorage.getItem("pb-team-" + boxId);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (e) {
+    return [];
+  }
+}
+function saveTeams(boxId, teams) {
+  localStorage.setItem("pb-team-" + boxId, JSON.stringify(teams));
+}
+function setTeamBtnLabel(teamBtn, teams) {
+  const label = teamBtn.querySelector(".team-btn-label");
+  if (!teams || teams.length === 0) {
+    label.textContent = "Team";
+    teamBtn.classList.remove("assigned");
+    teamBtn.title = "Indicar a(s) equipa(s) que executaram esta ação";
+  } else {
+    label.textContent = teams.length === 1 ? teams[0] : `${teams.length} equipas`;
+    teamBtn.classList.add("assigned");
+    teamBtn.title = "Equipas: " + teams.join(", ") + " — clique para alterar";
+  }
+}
+
+function initChecklists() {
+  const items = document.querySelectorAll(".checklist-item");
+  items.forEach(li => {
+    const box = li.querySelector('input[type=checkbox]');
+    const picker = li.querySelector(".team-picker");
+    const teamBtn = li.querySelector(".team-btn");
+    const checkKey = "pb-check-" + box.id;
+
+    const savedChecked = localStorage.getItem(checkKey) === "1";
+    const savedTeams = getTeams(box.id);
+    setTeamBtnLabel(teamBtn, savedTeams);
+    li.querySelectorAll(".team-opt").forEach(opt => {
+      opt.classList.toggle("selected", savedTeams.includes(opt.dataset.team));
+    });
+    if (savedChecked) {
+      box.checked = true;
+      li.classList.add("done");
+      if (savedTeams.length === 0) picker.hidden = false;
+    }
+
+    box.addEventListener("change", () => {
+      localStorage.setItem(checkKey, box.checked ? "1" : "0");
+      li.classList.toggle("done", box.checked);
+      picker.hidden = !(box.checked && getTeams(box.id).length === 0);
+    });
+
+    teamBtn.addEventListener("click", () => {
+      picker.hidden = !picker.hidden;
+    });
+  });
+}
+
+document.addEventListener("click", (e) => {
+  const teamOpt = e.target.closest(".team-opt");
+  if (teamOpt) {
+    const li = teamOpt.closest(".checklist-item");
+    const box = li.querySelector('input[type=checkbox]');
+    const teamBtn = li.querySelector(".team-btn");
+    const team = teamOpt.dataset.team;
+    const teams = getTeams(box.id);
+    const idx = teams.indexOf(team);
+    if (idx === -1) { teams.push(team); teamOpt.classList.add("selected"); }
+    else { teams.splice(idx, 1); teamOpt.classList.remove("selected"); }
+    saveTeams(box.id, teams);
+    setTeamBtnLabel(teamBtn, teams);
+    return;
+  }
+  const doneBtn = e.target.closest(".team-picker-done");
+  if (doneBtn) {
+    doneBtn.closest(".team-picker").hidden = true;
+  }
+});
+
+/* Detection-method markers (which method actually caught the incident) */
+function initMethodToggles() {
+  const boxes = document.querySelectorAll(".chip-toggle input[type=checkbox]");
+  boxes.forEach(box => {
+    const key = "pb-method-" + box.id;
+    const saved = localStorage.getItem(key);
+    if (saved === "1") { box.checked = true; box.closest(".chip-toggle").classList.add("marked"); }
+    box.addEventListener("change", () => {
+      localStorage.setItem(key, box.checked ? "1" : "0");
+      box.closest(".chip-toggle").classList.toggle("marked", box.checked);
+    });
+  });
+}
+
+/* Search filter */
+function initSearch() {
+  const input = document.getElementById("search");
+  const counter = document.getElementById("visible-count");
+  input.addEventListener("input", () => {
+    const q = input.value.trim().toLowerCase();
+    let visible = 0;
+    document.querySelectorAll(".playbook").forEach(pb => {
+      const match = !q || pb.dataset.search.includes(q);
+      pb.style.display = match ? "" : "none";
+      if (match) visible++;
+    });
+    document.querySelectorAll(".cat-items li").forEach(li => {
+      const id = li.querySelector("a").dataset.target;
+      const pb = document.getElementById(id);
+      li.style.display = pb && pb.style.display !== "none" ? "" : "none";
+    });
+    document.querySelectorAll(".category-section").forEach(sec => {
+      const anyVisible = [...sec.querySelectorAll(".playbook")].some(p => p.style.display !== "none");
+      sec.style.display = anyVisible ? "" : "none";
+    });
+    counter.textContent = `${visible} playbook${visible === 1 ? "" : "s"}`;
+  });
+}
+
+/* Active link highlight on scroll */
+let scrollSpyObserver = null;
+function initScrollSpy() {
+  if (scrollSpyObserver) scrollSpyObserver.disconnect();
+  const links = document.querySelectorAll(".cat-items a");
+  const map = new Map();
+  links.forEach(l => map.set(l.dataset.target, l));
+  scrollSpyObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      const link = map.get(entry.target.id);
+      if (!link) return;
+      if (entry.isIntersecting) {
+        links.forEach(l => l.classList.remove("active"));
+        link.classList.add("active");
+      }
+    });
+  }, { rootMargin: "-15% 0px -75% 0px" });
+  document.querySelectorAll(".playbook").forEach(pb => scrollSpyObserver.observe(pb));
+}
+
+/* ---------- Inline text editing ---------- */
+const editingCards = new Set();
+
+function setEditMode(pbId, on) {
+  const article = document.getElementById(pbId);
+  if (!article) return;
+  article.classList.toggle("editing", on);
+  article.querySelectorAll("[data-editkey]").forEach(el => {
+    el.contentEditable = on ? "true" : "false";
+    el.spellcheck = false;
+  });
+  const btn = article.querySelector(`[data-edit-toggle="${pbId}"]`);
+  if (btn) btn.classList.toggle("active", on);
+}
+
+function reapplyEditModes() {
+  editingCards.forEach(id => setEditMode(id, true));
+}
+
+document.addEventListener("click", (e) => {
+  const editBtn = e.target.closest("[data-edit-toggle]");
+  if (!editBtn) return;
+  const id = editBtn.dataset.editToggle;
+  const on = !editingCards.has(id);
+  if (on) editingCards.add(id); else editingCards.delete(id);
+  setEditMode(id, on);
+});
+
+document.addEventListener("focusout", (e) => {
+  const el = e.target;
+  if (!(el instanceof HTMLElement)) return;
+  if (!el.matches("[data-editkey]") || el.contentEditable !== "true") return;
+  const key = el.dataset.editkey;
+  const text = el.textContent.replace(/\s+/g, " ").trim();
+  localStorage.setItem("pb-edit-" + key, text);
+  refreshAll();
+});
+
+document.addEventListener("keydown", (e) => {
+  const el = e.target;
+  if (e.key !== "Enter" || !(el instanceof HTMLElement)) return;
+  if (el.matches("[data-editkey]") && el.contentEditable === "true") {
+    e.preventDefault();
+    el.blur();
+  }
+});
+
+function refreshAll() {
+  renderNav();
+  renderContent();
+  initChecklists();
+  initMethodToggles();
+  initScrollSpy();
+  reapplyEditModes();
+}
+
+let expanded = false;
+document.getElementById("expand-all-btn").addEventListener("click", () => {
+  expanded = !expanded;
+  document.querySelectorAll(".checklist").forEach(c => c.style.display = expanded ? "none" : "");
+  document.querySelector("#expand-all-btn .btn-label").textContent = expanded ? "Mostrar checklists" : "Expandir tudo";
+});
+
+/* ---------- Standalone downloads (per playbook / per category) ---------- */
+function findPlaybook(id) {
+  for (const cat of CATEGORIES) {
+    const pb = cat.playbooks.find(p => p.id === id);
+    if (pb) return { pb, cat };
+  }
+  return null;
+}
+function findCategory(id) {
+  return CATEGORIES.find(c => c.id === id) || null;
+}
+
+function wrapStandalone(titleText, innerHtml) {
+  const styleTag = document.querySelector("style").outerHTML;
+  return `<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${titleText}</title>
+${styleTag}
+</head>
+<body>
+<div class="app" style="grid-template-columns:1fr;">
+<main class="main">
+<div class="content" style="padding:36px;max-width:880px;margin:0 auto;">
+${innerHtml}
+</div>
+</main>
+</div>
+<script>
+function setTeamBtnLabel(teamBtn, teams) {
+  var label = teamBtn.querySelector(".team-btn-label");
+  if (!teams || teams.length === 0) {
+    label.textContent = "Team";
+    teamBtn.classList.remove("assigned");
+  } else {
+    label.textContent = teams.length === 1 ? teams[0] : teams.length + " equipas";
+    teamBtn.classList.add("assigned");
+  }
+}
+document.querySelectorAll(".checklist-item").forEach(function (li) {
+  var box = li.querySelector("input[type=checkbox]");
+  var picker = li.querySelector(".team-picker");
+  var teamBtn = li.querySelector(".team-btn");
+  li._teams = [];
+  box.addEventListener("change", function () {
+    li.classList.toggle("done", box.checked);
+    picker.hidden = !(box.checked && li._teams.length === 0);
+  });
+  teamBtn.addEventListener("click", function () {
+    picker.hidden = !picker.hidden;
+  });
+});
+document.querySelectorAll(".team-opt").forEach(function (optBtn) {
+  optBtn.addEventListener("click", function () {
+    var li = optBtn.closest(".checklist-item");
+    var teamBtn = li.querySelector(".team-btn");
+    var team = optBtn.dataset.team;
+    var idx = li._teams.indexOf(team);
+    if (idx === -1) { li._teams.push(team); optBtn.classList.add("selected"); }
+    else { li._teams.splice(idx, 1); optBtn.classList.remove("selected"); }
+    setTeamBtnLabel(teamBtn, li._teams);
+  });
+});
+document.querySelectorAll(".team-picker-done").forEach(function (doneBtn) {
+  doneBtn.addEventListener("click", function () {
+    doneBtn.closest(".team-picker").hidden = true;
+  });
+});
+document.querySelectorAll(".chip-toggle input[type=checkbox]").forEach(function (box) {
+  box.addEventListener("change", function () {
+    box.closest(".chip-toggle").classList.toggle("marked", box.checked);
+  });
+});
+<\/script>
+</body>
+</html>`;
+}
+
+function downloadHtmlFile(filename, htmlString) {
+  const blob = new Blob([htmlString], { type: "text/html" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function slugForFile(s) {
+  return s.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-zA-Z0-9]+/g, "-").replace(/^-+|-+$/g, "").toLowerCase();
+}
+
+function downloadPlaybookById(id) {
+  const found = findPlaybook(id);
+  if (!found) return;
+  const html = wrapStandalone(`${found.pb.name} — Playbook de Cibersegurança`, renderPlaybook(found.pb, found.cat));
+  downloadHtmlFile(`playbook-${slugForFile(found.pb.name)}.html`, html);
+}
+
+function downloadCategoryById(id) {
+  const cat = findCategory(id);
+  if (!cat) return;
+  const banner = `
+    <div class="category-banner">
+      <div class="bar" style="background:${cat.color}"></div>
+      ${iconChip(cat.icon, cat.color, "lg")}
+      <h3>${esc(cat.name)}</h3>
+      <span class="n">${cat.playbooks.length} playbooks</span>
+    </div>`;
+  const inner = banner + cat.playbooks.map(pb => renderPlaybook(pb, cat)).join("");
+  const html = wrapStandalone(`${cat.name} — Playbooks de Cibersegurança`, inner);
+  downloadHtmlFile(`playbooks-${slugForFile(cat.name)}.html`, html);
+}
+
+document.addEventListener("click", (e) => {
+  const pbBtn = e.target.closest("[data-dl-pb]");
+  if (pbBtn) { downloadPlaybookById(pbBtn.dataset.dlPb); return; }
+  const catBtn = e.target.closest("[data-dl-cat]");
+  if (catBtn) { downloadCategoryById(catBtn.dataset.dlCat); }
+});
+
+function initStaticIcons() {
+  document.getElementById("brand-icon").outerHTML = iconChip("shield", "var(--accent)", "md");
+  document.getElementById("search-icon").innerHTML = icon("search");
+  document.getElementById("expand-icon").innerHTML = icon("chevrons-expand", "icon-xs");
+  document.getElementById("print-icon").innerHTML = icon("download", "icon-xs");
+  document.getElementById("matrix-icon").innerHTML = icon("clock", "icon-sm");
+  document.getElementById("home-icon").innerHTML = icon("home", "icon-xs");
+}
+
+document.getElementById("home-btn").addEventListener("click", () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  if (history.replaceState) history.replaceState(null, "", location.pathname + location.search);
+  document.querySelectorAll(".cat-items a").forEach(l => l.classList.remove("active"));
+});
+
+document.getElementById("reset-edits-btn").addEventListener("click", () => {
+  const ok = window.confirm("Repor todos os textos editados para a versão original? Os checklists marcados e as equipas atribuídas não são afetados.");
+  if (!ok) return;
+  Object.keys(localStorage).filter(k => k.startsWith("pb-edit-")).forEach(k => localStorage.removeItem(k));
+  refreshAll();
+});
+
+renderPriorityMatrix();
+refreshAll();
+initStaticIcons();
+initSearch();
+</script>
