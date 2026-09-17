@@ -4,8 +4,6 @@ Centro de playbooks de resposta a incidentes de cibersegurança — 15 runbooks 
 
 Inclui mapeamento **MITRE ATT&CK®**, uma **matriz de prioridade e escalonamento** (P1–P4) independente da severidade técnica, e referências às obrigações legais aplicáveis (**RGPD** e **NIS2**, com supervisão do CNCS em Portugal).
 
-🔗 **Demo ao vivo:** [iandrade1987.pythonanywhere.com](https://iandrade1987.pythonanywhere.com)
-
 ## Aplicação web (`app/`)
 
 Uma aplicação Flask + SQLite que corre localmente, com login e persistência real em base de dados: os textos editados, os itens de checklist marcados e as equipas atribuídas a cada ação ficam guardados entre sessões.
